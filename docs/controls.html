@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.controls · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link active" aria-current="page" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.controls</div>
+<h1><code>controls</code></h1>
+<p class="lede">Animation controls: curve, color, zero/offset groups and controller tag in one call.</p>
+<p>Example:</p>
+<pre><code class="language-python"></code></pre>
+<p>from pkrig4 import controls, shapes from pkrig4.naming import Side</p>
+<p>arm = controls.create_control("arm", "fk", side=Side.LEFT, shape=shapes.CUBE, match=jnt) arm.ctrl.rotate &gt;&gt; jnt.rotate # L_arm_fk_ctrl_zr &gt; L_arm_fk_ctrl_ofst &gt; L_arm_fk_ctrl</p>
+<p>ik = controls.create_control("arm", "ik", side=Side.LEFT, joint=True, match=wrist) # a joint control aligned to the wrist through jointOrient; rotate reads 0 at rest</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Control">Control</a></li><li><a href="#JointControl">JointControl</a></li><li><a href="#create_control">create_control</a></li><li><a href="#set_color">set_color</a></li></ul><div class="api"><div class="api-item" id="Control">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Control"><span class="name">Control</span></a>(ctrl: node.transform, offset: node.transform, zero: node.transform)</pre>
+<p class="bases">Bases: <code>NamedTuple</code></p>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th></th></tr></thead><tbody><tr><td><code>ctrl</code></td><td><code>node.transform</code></td><td>The transform the animator moves; holds the curve shape.</td></tr><tr><td><code>offset</code></td><td><code>node.transform</code></td><td>Free for automation (driven keys, constraints) without touching the pose.</td></tr><tr><td><code>zero</code></td><td><code>node.transform</code></td><td>Top group; holds the rest position.</td></tr></tbody></table></div>
+</div><div class="api-item" id="JointControl">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#JointControl"><span class="name">JointControl</span></a>(ctrl: node.joint, offset: node.transform, zero: node.transform)</pre>
+<p class="bases">Bases: <code>NamedTuple</code></p>
+<p>A control whose <code>ctrl</code> is a joint; see <code>create_control(joint=True)</code>.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th></th></tr></thead><tbody><tr><td><code>ctrl</code></td><td><code>node.joint</code></td><td>Joint with the curve shape; its rest orientation lives in <code>jointOrient</code>.</td></tr><tr><td><code>offset</code></td><td><code>node.transform</code></td><td></td></tr><tr><td><code>zero</code></td><td><code>node.transform</code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="create_control"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#create_control"><span class="name">create_control</span></a>(
+    *parts: str,
+    side: Side = Side.CENTER,
+    shape: shapes.CurveShape = shapes.CIRCLE,
+    size: float = 1.0,
+    color: Color | None = None,
+    parent: DagNode | str | None = None,
+    match: Transform | str | None = None,
+    locked: Sequence[str] = (&#x27;visibility&#x27;,),
+    joint: bool = False,
+) -&gt; Control | JointControl</pre><p>Create a control under offset and zero groups.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>*parts</code></dt><dd>Name parts, e.g. <code>"arm", "fk"</code> → <code>L_arm_fk_ctrl</code>.</dd><dt><code>side</code></dt><dd>Side token for the name, and the default color.</dd><dt><code>shape</code></dt><dd>Curve shape from <code>pkrig4.shapes</code>.</dd><dt><code>size</code></dt><dd>Uniform scale applied to the shape's CVs.</dd><dt><code>color</code></dt><dd>Index color; defaults to <code>side_color</code>.</dd><dt><code>parent</code></dt><dd>Parent for the zero group.</dd><dt><code>match</code></dt><dd>Transform to snap to. A transform control's zero group takes its position and orientation. A joint control's zero group takes only the position, and the control's orientation goes into its <code>jointOrient</code>, so its rotate channels read zero at rest.</dd><dt><code>locked</code></dt><dd>Attributes to lock and hide on the control.</dd><dt><code>joint</code></dt><dd>Build the control as a joint (bone display hidden, radius locked) instead of a transform; returns a <code>JointControl</code>. Use it for IK controls that must align to a joint while keeping clean rotate values.</dd></dl></div><div class="api-item" id="set_color"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#set_color"><span class="name">set_color</span></a>(transform: DagNode | str, color: Color | int) -&gt; None</pre><p>Set the override color on every shape under <code>transform</code>.</p></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.spaces · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link active" aria-current="page" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.spaces</div>
+<h1><code>spaces</code></h1>
+<p class="lede">Space switching: let a control follow one of several parents.</p>
+<p>Example:</p>
+<pre><code class="language-python"></code></pre>
+<p>from pkrig4 import spaces</p>
+<p>spaces.add_space_switch( head.ctrl_zr, [(head.ctrl, "head"), (cog.ctrl, "cog"), (main.ctrl_grp, "world")], controller=head.ctrl, ) # head.ctrl gets an enum "parentTo": local / head / cog / world</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#SpaceSwitch">SpaceSwitch</a></li><li><a href="#add_space_switch">add_space_switch</a></li></ul><div class="api"><div class="api-item" id="SpaceSwitch">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#SpaceSwitch"><span class="name">SpaceSwitch</span></a>(
+    attr: Attr,
+    targets: list[node.transform],
+    conditions: list[node.condition],
+    constraint: Node,
+)</pre>
+<p class="bases">Bases: <code>NamedTuple</code></p>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th></th></tr></thead><tbody><tr><td><code>attr</code></td><td><code>Attr</code></td><td>Enum attribute on the controller.</td></tr><tr><td><code>targets</code></td><td><code>list[node.transform]</code></td><td>One group per space, parented under that space.</td></tr><tr><td><code>conditions</code></td><td><code>list[node.condition]</code></td><td></td></tr><tr><td><code>constraint</code></td><td><code>Node</code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="add_space_switch"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#add_space_switch"><span class="name">add_space_switch</span></a>(
+    driven: Transform | str,
+    spaces: Sequence[tuple[DagNode | str, str]],
+    *,
+    controller: Node | str,
+    kind: str = &#x27;parent&#x27;,
+    include_local: bool = True,
+    default: int = 0,
+) -&gt; SpaceSwitch</pre><p>Constrain <code>driven</code> to a choice of spaces picked by an enum on <code>controller</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>driven</code></dt><dd>Transform that follows the chosen space, usually a control's zero group.</dd><dt><code>spaces</code></dt><dd><code>(space, label)</code> pairs.</dd><dt><code>controller</code></dt><dd>Node that gets the enum attribute.</dd><dt><code>kind</code></dt><dd><code>"parent"</code>, <code>"orient"</code> or <code>"point"</code>; also names the attribute (<code>parentTo</code>, <code>orientTo</code>, <code>pointTo</code>).</dd><dt><code>include_local</code></dt><dd>Prepend <code>driven</code>'s current parent as a <code>local</code> space.</dd><dt><code>default</code></dt><dd>Index of the space selected at build time.</dd></dl></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

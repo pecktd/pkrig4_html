@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.constants · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link active" aria-current="page" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.constants</div>
+<h1><code>constants</code></h1>
+<p class="lede">Enumerations for Maya attribute values.</p>
+<p>All are <code>IntEnum</code> so they compare equal to the raw values and can be passed straight to :meth:<code>Attr.set &lt;pkrig4.attribute.Attr.set&gt;</code> or <code>cmds.setAttr</code>.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#RotateOrder">RotateOrder</a></li><li><a href="#Color">Color</a></li><li><a href="#side_color">side_color</a></li><li><a href="#DisplayType">DisplayType</a></li><li><a href="#JointDrawStyle">JointDrawStyle</a></li><li><a href="#JointLabelSide">JointLabelSide</a></li><li><a href="#JointLabelType">JointLabelType</a></li><li><a href="#PlusMinusAverageOp">PlusMinusAverageOp</a></li><li><a href="#MultiplyDivideOp">MultiplyDivideOp</a></li><li><a href="#ConditionOp">ConditionOp</a></li><li><a href="#VectorProductOp">VectorProductOp</a></li></ul><div class="api"><div class="api-item" id="RotateOrder">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#RotateOrder"><span class="name">RotateOrder</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>XYZ</code></td><td><code>0</code></td></tr><tr><td><code>YZX</code></td><td><code>1</code></td></tr><tr><td><code>ZXY</code></td><td><code>2</code></td></tr><tr><td><code>XZY</code></td><td><code>3</code></td></tr><tr><td><code>YXZ</code></td><td><code>4</code></td></tr><tr><td><code>ZYX</code></td><td><code>5</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="Color">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Color"><span class="name">Color</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>Maya index colors (<code>overrideColor</code>).</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>DEFAULT</code></td><td><code>0</code></td></tr><tr><td><code>BLACK</code></td><td><code>1</code></td></tr><tr><td><code>DARK_GRAY</code></td><td><code>2</code></td></tr><tr><td><code>GRAY</code></td><td><code>3</code></td></tr><tr><td><code>DARK_BLUE</code></td><td><code>15</code></td></tr><tr><td><code>BLUE</code></td><td><code>6</code></td></tr><tr><td><code>SOFT_BLUE</code></td><td><code>28</code></td></tr><tr><td><code>DARK_GREEN</code></td><td><code>7</code></td></tr><tr><td><code>GREEN</code></td><td><code>14</code></td></tr><tr><td><code>SOFT_GREEN</code></td><td><code>26</code></td></tr><tr><td><code>BROWN</code></td><td><code>11</code></td></tr><tr><td><code>DARK_RED</code></td><td><code>12</code></td></tr><tr><td><code>RED</code></td><td><code>13</code></td></tr><tr><td><code>SOFT_RED</code></td><td><code>31</code></td></tr><tr><td><code>WHITE</code></td><td><code>16</code></td></tr><tr><td><code>YELLOW</code></td><td><code>17</code></td></tr><tr><td><code>SOFT_YELLOW</code></td><td><code>21</code></td></tr><tr><td><code>DARK_YELLOW</code></td><td><code>25</code></td></tr><tr><td><code>PINK</code></td><td><code>20</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="side_color"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#side_color"><span class="name">side_color</span></a>(side: Side, *, soft: bool = False, dark: bool = False) -&gt; Color</pre><p>Color for a side: left = red, right = blue, center = yellow.</p></div><div class="api-item" id="DisplayType">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#DisplayType"><span class="name">DisplayType</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p><code>overrideDisplayType</code>.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>NORMAL</code></td><td><code>0</code></td></tr><tr><td><code>TEMPLATE</code></td><td><code>1</code></td></tr><tr><td><code>REFERENCE</code></td><td><code>2</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="JointDrawStyle">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#JointDrawStyle"><span class="name">JointDrawStyle</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>BONE</code></td><td><code>0</code></td></tr><tr><td><code>MULTI_CHILD_BOX</code></td><td><code>1</code></td></tr><tr><td><code>NONE</code></td><td><code>2</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="JointLabelSide">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#JointLabelSide"><span class="name">JointLabelSide</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>CENTER</code></td><td><code>0</code></td></tr><tr><td><code>LEFT</code></td><td><code>1</code></td></tr><tr><td><code>RIGHT</code></td><td><code>2</code></td></tr><tr><td><code>NONE</code></td><td><code>3</code></td></tr></tbody></table></div>
+<div class="members"><div class="member" id="JointLabelSide.from_side"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#JointLabelSide.from_side"><span class="name">from_side</span></a>(side: Side) -&gt; JointLabelSide</pre></div></div>
+</div><div class="api-item" id="JointLabelType">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#JointLabelType"><span class="name">JointLabelType</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>NONE</code></td><td><code>0</code></td></tr><tr><td><code>ROOT</code></td><td><code>1</code></td></tr><tr><td><code>HIP</code></td><td><code>2</code></td></tr><tr><td><code>KNEE</code></td><td><code>3</code></td></tr><tr><td><code>FOOT</code></td><td><code>4</code></td></tr><tr><td><code>TOE</code></td><td><code>5</code></td></tr><tr><td><code>SPINE</code></td><td><code>6</code></td></tr><tr><td><code>NECK</code></td><td><code>7</code></td></tr><tr><td><code>HEAD</code></td><td><code>8</code></td></tr><tr><td><code>COLLAR</code></td><td><code>9</code></td></tr><tr><td><code>SHOULDER</code></td><td><code>10</code></td></tr><tr><td><code>ELBOW</code></td><td><code>11</code></td></tr><tr><td><code>HAND</code></td><td><code>12</code></td></tr><tr><td><code>FINGER</code></td><td><code>13</code></td></tr><tr><td><code>THUMB</code></td><td><code>14</code></td></tr><tr><td><code>PROP_A</code></td><td><code>15</code></td></tr><tr><td><code>PROP_B</code></td><td><code>16</code></td></tr><tr><td><code>PROP_C</code></td><td><code>17</code></td></tr><tr><td><code>OTHER</code></td><td><code>18</code></td></tr><tr><td><code>INDEX_FINGER</code></td><td><code>19</code></td></tr><tr><td><code>MIDDLE_FINGER</code></td><td><code>20</code></td></tr><tr><td><code>RING_FINGER</code></td><td><code>21</code></td></tr><tr><td><code>PINKY_FINGER</code></td><td><code>22</code></td></tr><tr><td><code>EXTRA_FINGER</code></td><td><code>23</code></td></tr><tr><td><code>BIG_TOE</code></td><td><code>24</code></td></tr><tr><td><code>INDEX_TOE</code></td><td><code>25</code></td></tr><tr><td><code>MIDDLE_TOE</code></td><td><code>26</code></td></tr><tr><td><code>RING_TOE</code></td><td><code>27</code></td></tr><tr><td><code>PINKY_TOE</code></td><td><code>28</code></td></tr><tr><td><code>FOOT_THUMB</code></td><td><code>29</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="PlusMinusAverageOp">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#PlusMinusAverageOp"><span class="name">PlusMinusAverageOp</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>NO_OPERATION</code></td><td><code>0</code></td></tr><tr><td><code>SUM</code></td><td><code>1</code></td></tr><tr><td><code>SUBTRACT</code></td><td><code>2</code></td></tr><tr><td><code>AVERAGE</code></td><td><code>3</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="MultiplyDivideOp">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#MultiplyDivideOp"><span class="name">MultiplyDivideOp</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>NO_OPERATION</code></td><td><code>0</code></td></tr><tr><td><code>MULTIPLY</code></td><td><code>1</code></td></tr><tr><td><code>DIVIDE</code></td><td><code>2</code></td></tr><tr><td><code>POWER</code></td><td><code>3</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="ConditionOp">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#ConditionOp"><span class="name">ConditionOp</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>EQUAL</code></td><td><code>0</code></td></tr><tr><td><code>NOT_EQUAL</code></td><td><code>1</code></td></tr><tr><td><code>GREATER_THAN</code></td><td><code>2</code></td></tr><tr><td><code>GREATER_OR_EQUAL</code></td><td><code>3</code></td></tr><tr><td><code>LESS_THAN</code></td><td><code>4</code></td></tr><tr><td><code>LESS_OR_EQUAL</code></td><td><code>5</code></td></tr></tbody></table></div>
+</div><div class="api-item" id="VectorProductOp">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#VectorProductOp"><span class="name">VectorProductOp</span></a></pre>
+<p class="bases">Bases: <code>IntEnum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>NO_OPERATION</code></td><td><code>0</code></td></tr><tr><td><code>DOT_PRODUCT</code></td><td><code>1</code></td></tr><tr><td><code>CROSS_PRODUCT</code></td><td><code>2</code></td></tr><tr><td><code>VECTOR_MATRIX_PRODUCT</code></td><td><code>3</code></td></tr><tr><td><code>POINT_MATRIX_PRODUCT</code></td><td><code>4</code></td></tr></tbody></table></div>
+</div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

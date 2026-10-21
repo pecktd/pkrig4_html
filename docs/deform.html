@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.deform · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link active" aria-current="page" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.deform</div>
+<h1><code>deform</code></h1>
+<p class="lede">Deformer helpers: skinning, blend shapes, wraps and clean duplicates.</p>
+<p>from pkrig4 import deform</p>
+<pre><code class="language-python">skin = deform.bind_skin(jnts, "body_GEO")
+deform.connect_bind_pre_matrix(skin, exclude=["tweaker_master_jnt"])
+deform.add_front_blend_shape("facialRig:body_GEO", "body_GEO")
+wrap = deform.proximity_wrap("eyelash_GEO", ["head_GEO"])</code></pre>
+<p>None of these use the selection.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#find_skin_cluster">find_skin_cluster</a></li><li><a href="#bind_skin">bind_skin</a></li><li><a href="#connect_bind_pre_matrix">connect_bind_pre_matrix</a></li><li><a href="#add_front_blend_shape">add_front_blend_shape</a></li><li><a href="#proximity_wrap">proximity_wrap</a></li><li><a href="#duplicate_clean">duplicate_clean</a></li></ul><div class="api"><div class="api-item" id="find_skin_cluster"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#find_skin_cluster"><span class="name">find_skin_cluster</span></a>(geometry: DagNode | str) -&gt; node.skinCluster | None</pre><p>The skinCluster deforming <code>geometry</code>, or None.</p></div><div class="api-item" id="bind_skin"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#bind_skin"><span class="name">bind_skin</span></a>(
+    joints: Sequence[DagNode | str],
+    geometry: DagNode | str,
+    *,
+    name: str | None = None,
+    max_influences: int | None = None,
+) -&gt; node.skinCluster</pre><p>Bind <code>geometry</code> to exactly <code>joints</code> (not their descendants).</p></div><div class="api-item" id="connect_bind_pre_matrix"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#connect_bind_pre_matrix"><span class="name">connect_bind_pre_matrix</span></a>(skin: Node | str, *, exclude: Iterable[str] = ()) -&gt; None</pre><p>Drive each influence's bindPreMatrix from its parent's worldInverseMatrix.</p>
+<p>The skin then deforms only with motion relative to each joint's parent, so a whole skinned setup can ride along with its parent (e.g. facial skin on a moving head). Influence indices are read from the actual connections, so removed or reordered influences are handled.</p></div><div class="api-item" id="add_front_blend_shape"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#add_front_blend_shape"><span class="name">add_front_blend_shape</span></a>(
+    source: DagNode | str,
+    target: DagNode | str,
+    *,
+    weight: float = 1.0,
+    name: str | None = None,
+) -&gt; node.blendShape</pre><p>Blend <code>source</code> into <code>target</code> at the front of its deformation chain.</p></div><div class="api-item" id="proximity_wrap"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#proximity_wrap"><span class="name">proximity_wrap</span></a>(
+    driven: DagNode | str,
+    drivers: Sequence[DagNode | str],
+    *,
+    name: str | None = None,
+) -&gt; node.proximityWrap</pre><p>Deform <code>driven</code> with a proximityWrap following <code>drivers</code>.</p></div><div class="api-item" id="duplicate_clean"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#duplicate_clean"><span class="name">duplicate_clean</span></a>(dag: Transform | str, name: str | None = None) -&gt; node.transform</pre><p>Duplicate <code>dag</code> without intermediate shapes, with t/r/s/v unlocked and shown.</p>
+<p>Gives a clean copy of deformed geometry to use as a wrap driver or blend shape target.</p></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

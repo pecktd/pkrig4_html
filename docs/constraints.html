@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.constraints · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link active" aria-current="page" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.constraints</div>
+<h1><code>constraints</code></h1>
+<p class="lede">Constraints that return typed nodes and take per-target weights.</p>
+<p>from pkrig4 import constraints</p>
+<pre><code class="language-python">constraints.parent_constraint(arm.upper_arm_jnt, sleeve_zr, maintain_offset=True)
+constraints.point_constraint([a, b], loc, weights=[0.25, 0.75])
+constraints.constrain_to_skin_weights("body_GEO.vtx[812]", button_zr)</code></pre>
+<p><code>drivers</code> may be one node or a list. Parent and orient constraints use shortest-path rotation interpolation, so blended rotations don't flip.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#parent_constraint">parent_constraint</a></li><li><a href="#point_constraint">point_constraint</a></li><li><a href="#orient_constraint">orient_constraint</a></li><li><a href="#scale_constraint">scale_constraint</a></li><li><a href="#aim_constraint">aim_constraint</a></li><li><a href="#constrain_to_skin_weights">constrain_to_skin_weights</a></li></ul><div class="api"><div class="api-item" id="parent_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#parent_constraint"><span class="name">parent_constraint</span></a>(
+    drivers: Drivers,
+    driven: Node | str,
+    *,
+    maintain_offset: bool = False,
+    weights: Sequence[float] | None = None,
+    **flags: Any,
+) -&gt; node.parentConstraint</pre><p><code>cmds.parentConstraint</code> returning the wrapped constraint node.</p></div><div class="api-item" id="point_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#point_constraint"><span class="name">point_constraint</span></a>(
+    drivers: Drivers,
+    driven: Node | str,
+    *,
+    maintain_offset: bool = False,
+    weights: Sequence[float] | None = None,
+    **flags: Any,
+) -&gt; node.pointConstraint</pre></div><div class="api-item" id="orient_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#orient_constraint"><span class="name">orient_constraint</span></a>(
+    drivers: Drivers,
+    driven: Node | str,
+    *,
+    maintain_offset: bool = False,
+    weights: Sequence[float] | None = None,
+    **flags: Any,
+) -&gt; node.orientConstraint</pre></div><div class="api-item" id="scale_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#scale_constraint"><span class="name">scale_constraint</span></a>(
+    drivers: Drivers,
+    driven: Node | str,
+    *,
+    maintain_offset: bool = False,
+    weights: Sequence[float] | None = None,
+    **flags: Any,
+) -&gt; node.scaleConstraint</pre></div><div class="api-item" id="aim_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#aim_constraint"><span class="name">aim_constraint</span></a>(
+    drivers: Drivers,
+    driven: Node | str,
+    *,
+    aim_axis: Sequence[float] = (0, 1, 0),
+    up_axis: Sequence[float] = (1, 0, 0),
+    up_vector: Sequence[float] = (0, 1, 0),
+    up_object: Node | str | None = None,
+    maintain_offset: bool = False,
+    weights: Sequence[float] | None = None,
+    **flags: Any,
+) -&gt; node.aimConstraint</pre><p>Aim <code>aim_axis</code> at the drivers; <code>up_axis</code> follows <code>up_vector</code> or <code>up_object</code>.</p></div><div class="api-item" id="constrain_to_skin_weights"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#constrain_to_skin_weights"><span class="name">constrain_to_skin_weights</span></a>(
+    vertex: str,
+    driven: Node | str,
+    *,
+    ignore_below: float = 0.001,
+) -&gt; node.parentConstraint</pre><p>Parent-constrain <code>driven</code> to the joints that skin <code>vertex</code>, with the same weights.</p>
+<p>Influences below <code>ignore_below</code> are dropped and the rest renormalised to sum to 1, so the constraint follows the vertex the way the skin does.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>The mesh has no skinCluster, or the vertex has no weights above <code>ignore_below</code>.</dd></dl></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

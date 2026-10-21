@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.shapes · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link active" aria-current="page" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.shapes</div>
+<h1><code>shapes</code></h1>
+<p class="lede">Controller curve shapes.</p>
+<p>Each shape is a <code>CurveShape</code> constant (<code>CIRCLE</code>, <code>CUBE</code>, ...); look one up by name with <code>SHAPES["cube"]</code>. Attach a shape to a transform with <code>add_curve</code>, or make a new curve transform with <code>create_curve</code>.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#CurveShape">CurveShape</a></li><li><a href="#SHAPES">SHAPES</a></li><li><a href="#add_curve">add_curve</a></li><li><a href="#create_curve">create_curve</a></li></ul><div class="api"><div class="api-item" id="CurveShape">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#CurveShape"><span class="name">CurveShape</span></a>(points: tuple[Point, ...], degree: int = 1, periodic: bool = False)</pre>
+<p>NURBS curve data. Periodic shapes list each CV once (no overlap).</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>points</code></td><td><code>tuple[Point, ...]</code></td><td><code></code></td><td></td></tr><tr><td><code>degree</code></td><td><code>int</code></td><td><code>1</code></td><td></td></tr><tr><td><code>periodic</code></td><td><code>bool</code></td><td><code>False</code></td><td></td></tr></tbody></table></div>
+<div class="members"><div class="member" id="CurveShape.spans"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#CurveShape.spans"><span class="name">spans</span></a>: int<span class="kind"></span></pre></div><div class="member" id="CurveShape.cvs"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#CurveShape.cvs"><span class="name">cvs</span></a>: tuple[Point, ...]<span class="kind"></span></pre><p>CVs as Maya stores them (periodic curves repeat the first <code>degree</code>).</p></div><div class="member" id="CurveShape.knots"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#CurveShape.knots"><span class="name">knots</span></a>: tuple[float, ...]<span class="kind"></span></pre></div><div class="member" id="CurveShape.scaled"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#CurveShape.scaled"><span class="name">scaled</span></a>(factor: float) -&gt; CurveShape</pre></div></div>
+</div><div class="api-item" id="SHAPES"><pre class="sig"><a class="anchor" href="#SHAPES"><span class="name">SHAPES</span></a>: dict[str, CurveShape]</pre><p>Keys: <code>nurbs_circle</code>, <code>circle</code>, <code>square</code>, <code>triangle</code>, <code>plus</code>, <code>cross</code>, <code>cube</code>, <code>capsule</code>, <code>stick</code>, <code>double_stick</code>, <code>sphere</code>, <code>double_circle</code>, <code>one_arrow</code>, <code>two_arrows</code>, <code>three_arrows</code>, <code>four_arrows</code>, <code>fkik</code>, <code>wing</code>, <code>human_head</code>, <code>human_body</code>, <code>human_l_arm</code>, <code>human_l_leg</code>, <code>human_r_arm</code>, <code>human_r_leg</code></p></div><div class="api-item" id="add_curve"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#add_curve"><span class="name">add_curve</span></a>(
+    transform: Transform | str,
+    shape: CurveShape,
+    *,
+    name: str | None = None,
+) -&gt; node.nurbsCurve</pre><p>Add <code>shape</code> as a nurbsCurve shape under <code>transform</code> and return the shape.</p></div><div class="api-item" id="create_curve"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#create_curve"><span class="name">create_curve</span></a>(shape: CurveShape, name: str = &#x27;curve&#x27;) -&gt; node.transform</pre><p>Create a new transform with <code>shape</code> as its curve.</p></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

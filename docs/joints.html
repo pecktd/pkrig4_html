@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.joints · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link active" aria-current="page" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.joints</div>
+<h1><code>joints</code></h1>
+<p class="lede">Joint placement and orientation.</p>
+<p>from pkrig4 import joints, node</p>
+<pre><code class="language-python">jnt = joints.create_joint_at("L_upper_arm_guide", "L_upper_arm_jnt")
+joints.orient_chain(jnt)                       # aim +Y down the chain, up +X
+zero = joints.create_zero_group(ctrl)          # "L_arm_ctrl_zr", in place</code></pre>
+<p>Every function edits the scene through <code>maya.cmds</code>, so each one is undoable.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#create_joint_at">create_joint_at</a></li><li><a href="#create_zero_group">create_zero_group</a></li><li><a href="#aim">aim</a></li><li><a href="#orient_joint">orient_joint</a></li><li><a href="#orient_chain">orient_chain</a></li></ul><div class="api"><div class="api-item" id="create_joint_at"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#create_joint_at"><span class="name">create_joint_at</span></a>(
+    target: Transform | str,
+    name: str | None = None,
+    *,
+    parent: DagNode | str | None = None,
+) -&gt; node.joint</pre><p>Create a joint at <code>target</code>'s world position and orientation.</p>
+<p>The orientation is stored in <code>jointOrient</code> and <code>rotate</code> is left at zero, so the joint can be posed from a clean rest.</p></div><div class="api-item" id="create_zero_group"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#create_zero_group"><span class="name">create_zero_group</span></a>(
+    dag: Transform | str,
+    name: str | None = None,
+    *,
+    suffix: str = &#x27;zr&#x27;,
+) -&gt; node.transform</pre><p>Insert a group directly above <code>dag</code> that holds its current transform.</p>
+<p>The group takes <code>dag</code>'s place under its original parent and matches its world transform, so <code>dag</code>'s local translate, rotate and scale become identity. Call it again on the result to stack groups (<code>ofst</code> under <code>zr</code>, and so on).</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>dag</code></dt><dd>Transform to zero.</dd><dt><code>name</code></dt><dd>Group name. Defaults to <code>dag</code>'s name plus <code>suffix</code>, joined with the active convention's separator (<code>L_arm_ctrl_zr</code>).</dd><dt><code>suffix</code></dt><dd>Used only when <code>name</code> is not given.</dd></dl></div><div class="api-item" id="aim"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#aim"><span class="name">aim</span></a>(
+    dag: Transform | str,
+    target: DagNode | str,
+    *,
+    aim_axis: Vector = (0, 1, 0),
+    up_axis: Vector = (1, 0, 0),
+    up_vector: Vector = (0, 1, 0),
+) -&gt; None</pre><p>Rotate <code>dag</code> so <code>aim_axis</code> points at <code>target</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>dag</code></dt><dd>Transform to rotate.</dd><dt><code>target</code></dt><dd>Transform to aim at. Only its world position is used, so it may be a child of <code>dag</code>.</dd><dt><code>aim_axis</code></dt><dd>Local axis of <code>dag</code> that points at the target.</dd><dt><code>up_axis</code></dt><dd>Local axis of <code>dag</code> that leans toward <code>up_vector</code>.</dd><dt><code>up_vector</code></dt><dd>World direction for <code>up_axis</code>.</dd></dl>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd><code>dag</code>'s rotation is driven by a connection or constraint.</dd></dl></div><div class="api-item" id="orient_joint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#orient_joint"><span class="name">orient_joint</span></a>(
+    jnt: Transform | str,
+    *,
+    aim_axis: Vector = (0, 1, 0),
+    up_axis: Vector = (1, 0, 0),
+    up_vector: Vector | None = None,
+) -&gt; None</pre><p>Aim a joint at its first child joint, keeping every child where it is.</p>
+<p>The new orientation is stored in <code>jointOrient</code>. A joint with no child joints takes its parent's orientation (<code>rotate</code> and <code>jointOrient</code> zeroed), which is the usual choice for chain ends.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>jnt</code></dt><dd>Joint to orient.</dd><dt><code>aim_axis</code></dt><dd>Local axis that points down the chain.</dd><dt><code>up_axis</code></dt><dd>Local axis that leans toward <code>up_vector</code>.</dd><dt><code>up_vector</code></dt><dd>World direction for <code>up_axis</code>. Defaults to that axis's current world direction, so the joint keeps its twist.</dd></dl></div><div class="api-item" id="orient_chain"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#orient_chain"><span class="name">orient_chain</span></a>(
+    root: Transform | str,
+    *,
+    aim_axis: Vector = (0, 1, 0),
+    up_axis: Vector = (1, 0, 0),
+    up_vector: Vector | None = None,
+) -&gt; None</pre><p>Run <code>orient_joint</code> on <code>root</code> and every joint below it, parents first.</p></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

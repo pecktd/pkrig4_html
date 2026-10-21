@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Development · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link active" aria-current="page" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">Development</div>
+<h1>Development</h1>
+<p class="lede">How to run the tests, set up VS Code, regenerate the editor stubs, and release a new version.</p>
+
+<h2 id="tests">Tests</h2>
+<p>The suite runs headless in mayapy and takes about a second:</p>
+<pre><code class="language-python">"C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe" tests/run.py [-v] [pattern]</code></pre>
+<p><code>tests/run.py</code> starts Maya, makes sure it imports <em>this</em> checkout of pkrig4 (a <code>userSetup.py</code> may already have imported another one), runs every <code>tests/test_*.py</code> with <code>unittest</code>, and exits non-zero on failure. Each test starts from an empty scene.</p>
+<div class="callout warn"><p>If <code>PYTHONPATH</code> contains a folder of Maya <em>completion stubs</em>, mayapy imports those instead of the real <code>maya.cmds</code>, and every call returns <code>None</code>. <code>tests/run.py</code> detects this and stops with the path to remove.</p></div>
+
+<h2 id="editor">Editor setup</h2>
+<p>Two sets of generated stubs give VS Code (Pylance) completion and accurate types. Both are produced from the running Maya and committed, so the editor works without Maya.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Generator</th><th>Provides</th></tr></thead>
+<tbody>
+<tr><td><code>node.pyi</code></td><td><code>scripts/generate_stubs.py</code></td><td>Every node type as a class with its attributes</td></tr>
+<tr><td><code>typings/maya/</code></td><td><code>scripts/generate_maya_typings.py</code></td><td><code>maya.cmds</code>, <code>maya.mel</code>, <code>maya.standalone</code> and the OpenMaya 2.0 modules</td></tr>
+</tbody></table></div>
+<p>Regenerate both after a Maya upgrade, or to include more plugin node types:</p>
+<pre><code class="language-python">"C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe" scripts/generate_stubs.py
+"C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe" scripts/generate_maya_typings.py</code></pre>
+<p>Point the editor at pkrig4's parent folder and Maya's own packages with a machine-local <code>.env</code> (not committed):</p>
+<pre><code>PYTHONPATH="C:/dev;C:/Program Files/Autodesk/Maya2024/Python/Lib/site-packages"</code></pre>
+<p><code>pyproject.toml</code> tells pyright/Pylance to read <code>typings/</code>, and turns off the "unused expression" check that would otherwise flag every <code>src &gt;&gt; dst</code> line.</p>
+
+<h2 id="style">Code style</h2>
+<ul>
+  <li>Format with <code>black</code> (line length 100); lint with <code>ruff</code> (configured in <code>pyproject.toml</code>, imports grouped as standard library, Maya, then pkrig4).</li>
+  <li>Google-style docstrings. Mark example code with <code>Example::</code> and indent it; this manual renders it as a code block.</li>
+  <li>List public names in each module's <code>__all__</code>; this manual documents exactly those.</li>
+  <li>Read the scene with OpenMaya 2.0, change it with <code>maya.cmds</code>, and never rely on the selection.</li>
+  <li>Return a named tuple when a function makes several nodes, and only add fields at the end.</li>
+</ul>
+
+<h2 id="versioning">Versioning</h2>
+<p>pkrig4 follows <a href="https://semver.org">semantic versioning</a>: <code>MAJOR.MINOR.PATCH</code>. Below 1.0, the API may still change between minor versions. The current version is <strong>0.0.2</strong>.</p>
+<ol>
+  <li>Bump <code>__version__</code> in <code>__init__.py</code> and the "Current version" line in the README in the same change; <code>tests/test_version.py</code> fails if they disagree.</li>
+  <li>Tag the commit <code>vX.Y.Z</code> so every release can be checked out.</li>
+  <li>Rebuild this manual from the new version.</li>
+</ol>
+<p>Build scripts can stamp <code>pk.__version__</code> onto the rig, so a published rig records which pkrig4 built it.</p>
+
+<h2 id="manual">Rebuilding this manual</h2>
+<p>The manual lives in the <code>pkrig4_html</code> repository. Its reference pages are generated from pkrig4's docstrings, so documentation changes belong in the code:</p>
+<pre><code class="language-python">"C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe" build.py --pkrig4-parent C:/dev</code></pre>
+<p>The output goes to <code>docs/</code>, which GitHub Pages serves.</p>
+
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

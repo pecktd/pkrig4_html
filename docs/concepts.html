@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Concepts · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link active" aria-current="page" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">Getting started</div>
+<h1>Concepts</h1>
+<p class="lede">Everything in pkrig4 builds on a few ideas: typed nodes, attributes as objects, one naming convention, and edits that can always be undone.</p>
+
+<h2 id="nodes">Nodes</h2>
+<p>Use <code>node.&lt;type&gt;</code> whenever you know the node type while writing code. It creates a new node, or wraps one that already exists in the scene and checks its type:</p>
+<pre><code class="language-python">from pkrig4 import node
+
+md = node.multiplyDivide("L_arm_stretch_mdv")      # create
+grp = node.transform("L_arm_grp", parent="rig_grp")
+jnt = node.joint.wrap("L_arm_jnt")                 # wrap an existing joint
+node.joint.wrap("persp")                           # TypeError: persp is a transform, not a joint.</code></pre>
+<p>Every node is one of four wrapper classes from <a href="core.html"><code>core</code></a>, picked automatically:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Class</th><th>For</th><th>Adds</th></tr></thead>
+<tbody>
+<tr><td><code>Node</code></td><td>Any node</td><td>name, type, attribute access, <code>add_attr</code>, <code>lock_and_hide</code>, <code>delete</code></td></tr>
+<tr><td><code>DagNode</code></td><td>Anything in the DAG, shapes included</td><td><code>parent</code>, <code>children()</code>, <code>shapes()</code>, <code>full_path</code>, <code>world_matrix</code></td></tr>
+<tr><td><code>Transform</code></td><td>Transforms</td><td><code>world_position</code>, <code>match()</code>, <code>freeze()</code>, <code>reset()</code>, <code>axis()</code></td></tr>
+<tr><td><code>Joint</code></td><td>Joints</td><td>Everything a transform has</td></tr>
+</tbody></table></div>
+<p>So <code>node.joint()</code> is a <code>Joint</code> and <code>node.locator()</code> (which returns the shape) is a <code>DagNode</code>. When the type is only known at runtime, use the untyped forms <code>pk.create(type_name)</code> and <code>pk.wrap(name)</code>.</p>
+<p>A wrapper holds Maya's handle to the node, not its name. It keeps working after the node is renamed or reparented, and two wrappers of the same node compare equal.</p>
+
+<h2 id="attributes">Attributes</h2>
+<p>Any attribute is reachable as a Python attribute, by long or short name, including dynamic and plugin attributes. Each one is an <a href="attribute.html"><code>Attr</code></a>:</p>
+<pre><code class="language-python">ctrl.translateX.value = 2          # read and write through .value
+ctrl.t.value = (0, 1, 0)           # compounds take and return tuples
+ctrl.rotateOrder.value = pk.RotateOrder.ZXY
+
+ctrl.tx &gt;&gt; md.i1x                  # connect
+ctrl.tx.connect(md.i1x, force=False)
+ctrl.worldMatrix[0] &gt;&gt; dcmp.inputMatrix
+remap.value[1].value_Position.value = 0.5
+
+ctrl.lock_and_hide("scale", "visibility")
+ctrl.unlock_and_show("scale")
+twist = ctrl.add_attr("twist", min_value=-180, max_value=180)</code></pre>
+<p><code>&gt;&gt;</code> returns nothing, so a chain like <code>a &gt;&gt; b &gt;&gt; c</code> raises an error instead of guessing what you meant. Write two lines.</p>
+<div class="callout"><p><strong>Python members win.</strong> If a Maya attribute has the same name as a Python member, such as <code>name</code> or <code>parent</code>, the Python member is used. Reach the Maya attribute with <code>node.attr("name")</code>. The same goes for attribute names that are Python keywords: <code>surface.attr("is")</code>.</p></div>
+
+<h2 id="naming">Naming</h2>
+<p>Names follow <code>[side]_part_part_suffix</code>, built and read by <a href="naming.html"><code>naming</code></a>. The default side tokens are <code>L</code> and <code>R</code>:</p>
+<pre><code class="language-python">pk.compose("arm", "ik", side=pk.Side.LEFT, suffix="ctrl")   # 'L_arm_ik_ctrl'
+pk.parse("R_leg_jnt")                                         # NameParts(side=Side.RIGHT, parts=('leg',), suffix='jnt')
+pk.mirror("L_arm_ctrl")                                       # 'R_arm_ctrl'
+
+with pk.use_convention(pk.Convention(left="lft", right="rgt")):
+    pk.compose("arm", side=pk.Side.LEFT, suffix="ctrl")      # 'lft_arm_ctrl'</code></pre>
+<p>Helpers that create several nodes name them consistently from one base, for example <code>L_arm_fk_ctrl</code> under <code>L_arm_fk_ctrl_ofst</code> under <code>L_arm_fk_ctrl_zr</code>.</p>
+
+<h2 id="undo">Undo and the selection</h2>
+<p>pkrig4 reads the scene through OpenMaya 2.0 (fast) and makes every change through <code>maya.cmds</code>, so every change is undoable. Wrap a build in <code>undo_chunk</code> to undo it in one step:</p>
+<pre><code class="language-python">@pk.undo_chunk("build arm")
+def build_arm(): ...</code></pre>
+<p>Nothing in pkrig4 depends on, or changes, the selection.</p>
+
+<h2 id="results">Results with several parts</h2>
+<p>Functions that create several nodes return a named tuple. Use the parts by name, or unpack them:</p>
+<pre><code class="language-python">arm = controls.create_control("arm", "fk", side=pk.Side.LEFT)
+arm.ctrl.rotate &gt;&gt; jnt.rotate
+ctrl, offset, zero = arm</code></pre>
+<p>Fields are only ever added at the end, so unpacking stays valid across versions.</p>
+
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

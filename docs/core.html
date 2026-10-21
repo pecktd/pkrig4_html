@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.core · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link active" aria-current="page" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.core</div>
+<h1><code>core</code></h1>
+<p class="lede">Node wrappers.</p>
+<p>Every Maya node is wrapped by one of four classes, picked by <code>wrap</code>:</p>
+<pre><code class="language-python">Node            any dependency node
+└── DagNode     anything in the DAG (shapes included)
+    └── Transform
+        └── Joint</code></pre>
+<p>For typed, autocompleting access per Maya node type (<code>node.multiplyDivide()</code>), see <code>pkrig4.node</code>, which builds on these.</p>
+<p>A wrapper holds an <code>MObjectHandle</code>, so it survives renames and reparenting. Attributes are reached generically: <code>node.translateX</code> returns an <code>Attr</code> for any attribute the node has, built-in or dynamic. Python members win over Maya attributes of the same name; use <code>node.attr("name")</code> in that case.</p>
+<p>Queries use OpenMaya 2.0; every edit goes through <code>maya.cmds</code> so it is undoable.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Node">Node</a></li><li><a href="#DagNode">DagNode</a></li><li><a href="#Transform">Transform</a></li><li><a href="#Joint">Joint</a></li><li><a href="#wrap">wrap</a></li><li><a href="#create">create</a></li><li><a href="#ls">ls</a></li><li><a href="#selected">selected</a></li></ul><div class="api"><div class="api-item" id="Node">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Node"><span class="name">Node</span></a>(node: Node | str | om.MObject)</pre>
+<p>Any dependency node.</p>
+<div class="members"><div class="member" id="Node.mobject"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Node.mobject"><span class="name">mobject</span></a>: om.MObject<span class="kind"></span></pre></div><div class="member" id="Node.exists"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Node.exists"><span class="name">exists</span></a>: bool<span class="kind"></span></pre></div><div class="member" id="Node.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Node.name"><span class="name">name</span></a>: str<span class="kind"> (settable)</span></pre></div><div class="member" id="Node.node_type"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Node.node_type"><span class="name">node_type</span></a>: str<span class="kind"></span></pre></div><div class="member" id="Node.uuid"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Node.uuid"><span class="name">uuid</span></a>: str<span class="kind"></span></pre></div><div class="member" id="Node.attr_names"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.attr_names"><span class="name">attr_names</span></a>() -&gt; list[str]</pre><p>Long names of every attribute on this node that Python can spell.</p></div><div class="member" id="Node.attr"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.attr"><span class="name">attr</span></a>(path: str) -&gt; Attr</pre><p>Explicit attribute access, for paths or names Python can't spell.</p></div><div class="member" id="Node.has_attr"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.has_attr"><span class="name">has_attr</span></a>(name: str) -&gt; bool</pre></div><div class="member" id="Node.add_attr"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.add_attr"><span class="name">add_attr</span></a>(
+    name: str,
+    attr_type: str = &#x27;double&#x27;,
+    *,
+    default: float | None = None,
+    min_value: float | None = None,
+    max_value: float | None = None,
+    enum_names: Sequence[str] = (),
+    keyable: bool = True,
+    **kwargs,
+) -&gt; Attr</pre><p>Add a dynamic attribute and return it.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>name</code></dt><dd>Long name.</dd><dt><code>attr_type</code></dt><dd>Any <code>addAttr</code> attributeType or dataType, e.g. <code>"double"</code>, <code>"bool"</code>, <code>"enum"</code>, <code>"string"</code>, <code>"matrix"</code>, <code>"double3"</code>.</dd><dt><code>default</code></dt><dd>Default value (numeric types only).</dd><dt><code>min_value</code></dt><dd>Minimum value (numeric types only).</dd><dt><code>max_value</code></dt><dd>Maximum value (numeric types only).</dd><dt><code>enum_names</code></dt><dd>Field names for <code>"enum"</code> attributes.</dd><dt><code>keyable</code></dt><dd>Show in the channel box as keyable (numeric types only).</dd><dt><code>**kwargs</code></dt><dd>Passed through to <code>cmds.addAttr</code>.</dd></dl></div><div class="member" id="Node.lock"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.lock"><span class="name">lock</span></a>(*names: str) -&gt; None</pre></div><div class="member" id="Node.hide"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.hide"><span class="name">hide</span></a>(*names: str) -&gt; None</pre></div><div class="member" id="Node.lock_and_hide"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.lock_and_hide"><span class="name">lock_and_hide</span></a>(*names: str) -&gt; None</pre></div><div class="member" id="Node.unlock_and_show"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.unlock_and_show"><span class="name">unlock_and_show</span></a>(*names: str) -&gt; None</pre><p>Make attributes unlocked and keyable, e.g. <code>ctrl.unlock_and_show("t", "r", "s")</code>.</p></div><div class="member" id="Node.delete"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Node.delete"><span class="name">delete</span></a>() -&gt; None</pre></div></div>
+</div><div class="api-item" id="DagNode">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#DagNode"><span class="name">DagNode</span></a>(node: Node | str | om.MObject)</pre>
+<p class="bases">Bases: <code>Node</code></p>
+<p>Any DAG node, transforms and shapes alike.</p>
+<div class="members"><div class="member" id="DagNode.dag_path"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.dag_path"><span class="name">dag_path</span></a>: om.MDagPath<span class="kind"></span></pre></div><div class="member" id="DagNode.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.name"><span class="name">name</span></a>: str<span class="kind"> (settable)</span></pre><p>Shortest unique path.</p></div><div class="member" id="DagNode.full_path"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.full_path"><span class="name">full_path</span></a>: str<span class="kind"></span></pre></div><div class="member" id="DagNode.is_shape"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.is_shape"><span class="name">is_shape</span></a>: bool<span class="kind"></span></pre></div><div class="member" id="DagNode.parent"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.parent"><span class="name">parent</span></a>: DagNode | None<span class="kind"> (settable)</span></pre></div><div class="member" id="DagNode.set_parent"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DagNode.set_parent"><span class="name">set_parent</span></a>(parent: DagNode | str | None, *, keep_world: bool = True) -&gt; None</pre><p>Reparent, or unparent to the world when <code>parent</code> is None.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>parent</code></dt><dd>New parent.</dd><dt><code>keep_world</code></dt><dd>Keep the world-space transform (Maya's default). When False, the local transform values are kept instead.</dd></dl></div><div class="member" id="DagNode.children"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DagNode.children"><span class="name">children</span></a>(node_type: str | None = None) -&gt; list[DagNode]</pre></div><div class="member" id="DagNode.descendants"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DagNode.descendants"><span class="name">descendants</span></a>(node_type: str | None = None) -&gt; list[DagNode]</pre></div><div class="member" id="DagNode.shapes"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DagNode.shapes"><span class="name">shapes</span></a>(*, intermediate: bool = False) -&gt; list[DagNode]</pre></div><div class="member" id="DagNode.shape"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.shape"><span class="name">shape</span></a>: DagNode | None<span class="kind"></span></pre><p>First non-intermediate shape.</p></div><div class="member" id="DagNode.world_matrix"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#DagNode.world_matrix"><span class="name">world_matrix</span></a>: om.MMatrix<span class="kind"></span></pre></div></div>
+</div><div class="api-item" id="Transform">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Transform"><span class="name">Transform</span></a>(node: Node | str | om.MObject)</pre>
+<p class="bases">Bases: <code>DagNode</code></p>
+<p>Transform node.</p>
+<div class="members"><div class="member" id="Transform.world_position"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Transform.world_position"><span class="name">world_position</span></a>: om.MVector<span class="kind"> (settable)</span></pre></div><div class="member" id="Transform.axis"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Transform.axis"><span class="name">axis</span></a>(index: int) -&gt; om.MVector</pre><p>World-space axis vector: 0 = X, 1 = Y, 2 = Z (unnormalised).</p></div><div class="member" id="Transform.match"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Transform.match"><span class="name">match</span></a>(
+    target: Transform | str,
+    *,
+    translate: bool = True,
+    rotate: bool = True,
+    scale: bool = False,
+) -&gt; None</pre><p>Snap to <code>target</code> in world space.</p></div><div class="member" id="Transform.freeze"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Transform.freeze"><span class="name">freeze</span></a>(*, translate: bool = True, rotate: bool = True, scale: bool = True) -&gt; None</pre></div><div class="member" id="Transform.reset"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Transform.reset"><span class="name">reset</span></a>() -&gt; None</pre><p>Zero unlocked translate/rotate and set unlocked scale to 1.</p></div></div>
+</div><div class="api-item" id="Joint">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Joint"><span class="name">Joint</span></a>(node: Node | str | om.MObject)</pre>
+<p class="bases">Bases: <code>Transform</code></p>
+<p>Joint node.</p>
+</div><div class="api-item" id="wrap"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#wrap"><span class="name">wrap</span></a>(node: Node | str | om.MObject) -&gt; Node</pre><p>Wrap a node in the most specific class: Joint, Transform, DagNode or Node.</p></div><div class="api-item" id="create"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#create"><span class="name">create</span></a>(
+    node_type: str,
+    name: str | None = None,
+    *,
+    parent: DagNode | str | None = None,
+) -&gt; Node</pre><p>Create a node from a type name, without touching the selection.</p>
+<p>Prefer <code>node.&lt;type&gt;()</code> from <code>pkrig4.node</code> when the type is known while writing the code; it is typed for the editor. Use this when the type is only known at runtime (data-driven builds). Shape types created without a parent get a new transform; the shape is returned.</p></div><div class="api-item" id="ls"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ls"><span class="name">ls</span></a>(*args, **kwargs) -&gt; list[Node]</pre><p><code>cmds.ls</code> returning wrapped nodes.</p></div><div class="api-item" id="selected"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#selected"><span class="name">selected</span></a>() -&gt; list[Node]</pre></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

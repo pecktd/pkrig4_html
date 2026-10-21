@@ -1,0 +1,22 @@
+<h2 id="usage">Creating and wrapping</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Call</th><th>Does</th></tr></thead>
+<tbody>
+<tr><td><code>node.&lt;type&gt;(name=None, *, parent=None)</code></td><td>Creates a node of that type without changing the selection. Shape types created without a parent get a new transform; the shape is returned.</td></tr>
+<tr><td><code>node.&lt;type&gt;.wrap(node)</code></td><td>Wraps an existing node, given a name, a wrapper or an <code>MObject</code>. Raises <code>TypeError</code> if it isn't that type or a subtype (<code>node.transform.wrap(a_joint)</code> is fine), and <code>ValueError</code> if no node, or more than one, matches the name.</td></tr>
+<tr><td><code>dir(node)</code></td><td>Lists every node type Maya knows, including types from loaded plugins.</td></tr>
+</tbody></table></div>
+<p>Each class is a subclass of the matching <a href="core.html"><code>core</code></a> wrapper, so it has all of that wrapper's methods, and <code>isinstance(md, node.multiplyDivide)</code> works:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Class</th><th>Inherits from</th></tr></thead>
+<tbody>
+<tr><td><code>node.joint</code></td><td><code>Joint</code> → <code>Transform</code> → <code>DagNode</code> → <code>Node</code></td></tr>
+<tr><td><code>node.transform</code></td><td><code>Transform</code> → <code>DagNode</code> → <code>Node</code></td></tr>
+<tr><td><code>node.locator</code>, <code>node.mesh</code>, other shapes</td><td><code>DagNode</code> → <code>Node</code></td></tr>
+<tr><td>Everything else (<code>node.multiplyDivide</code>, …)</td><td><code>Node</code></td></tr>
+</tbody></table></div>
+
+<h2 id="how">How it works</h2>
+<p>No class is written out per node type. The first time you use <code>node.multiplyDivide</code>, the module checks that Maya knows the type, builds the class, and caches it. Attribute access like <code>md.i1x</code> goes through <code>Node</code>'s generic attribute lookup, so no per-attribute code exists at runtime either.</p>
+<p>The editor can't see classes that are built while Maya runs, so a generated stub file, <code>node.pyi</code>, describes all of them: one class per node type, following Maya's own type hierarchy, with each type's attributes under their long and short names. VS Code reads it for completion and never runs it. See <a href="development.html#editor">Development</a> for regenerating it.</p>
+<div class="callout"><p>Plugin types work at runtime once their plugin is loaded. Before that, <code>node.eulerToQuat</code> raises <code>AttributeError: Maya has no node type 'eulerToQuat'; is its plugin loaded?</code>. Abstract types such as <code>dagNode</code> can be used with <code>wrap()</code> but not created.</p></div>

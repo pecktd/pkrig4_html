@@ -1,0 +1,63 @@
+<div class="eyebrow">Manual · version {version}</div>
+<h1>pkrig4</h1>
+<p class="lede">The core of a Maya rigging framework: typed node and attribute wrappers with editor autocomplete, a naming convention, controller shapes, and the rigging helpers build scripts reach for most often.</p>
+
+<pre><code class="language-python">import pkrig4 as pk
+from pkrig4 import constraints, controls, joints, node, scene, shapes, spaces
+
+side = pk.Side.LEFT
+rig = node.transform("rig_grp")
+
+jnt = joints.create_joint_at("L_wrist_guide", "L_wrist_jnt")
+fk = controls.create_control("wrist", "fk", side=side, shape=shapes.CUBE, parent=rig, match=jnt)
+constraints.parent_constraint(fk.ctrl, jnt)
+
+ik = controls.create_control("arm", "ik", side=side, joint=True, parent=rig, match=jnt)
+spaces.add_space_switch(ik.zero, [("cog_ctrl", "cog"), ("world_ctrl", "world")], controller=ik.ctrl)
+
+md = node.multiplyDivide()            # node. and md. both autocomplete
+fk.ctrl.tx &gt;&gt; md.i1x
+md.op.value = pk.MultiplyDivideOp.DIVIDE
+
+scene.delete_if_exists("guide_grp")
+scene.set_joint_radius(0.2)</code></pre>
+
+<h2>Install</h2>
+<p>pkrig4 needs Maya 2024 or later (Python 3.10+). Put the folder that <em>contains</em> <code>pkrig4</code> on Maya's Python path, for example in <code>userSetup.py</code> or <code>Maya.env</code>:</p>
+<pre><code class="language-python">import sys
+sys.path.insert(0, "C:/dev")   # the parent of the pkrig4 folder
+
+import pkrig4 as pk
+print(pk.__version__)</code></pre>
+<div class="callout info"><p>Add the <em>parent</em> folder, not <code>C:/dev/pkrig4</code> itself. pkrig4 is imported as a package, and putting its own folder on the path would let its modules shadow others with the same name.</p></div>
+
+<h2>What's inside</h2>
+<h3>Core</h3>
+<div class="cards">
+  <a class="card" href="node.html"><b>node</b><span>One class per Maya node type: <code>node.multiplyDivide()</code>, <code>node.joint.wrap(name)</code></span></a>
+  <a class="card" href="core.html"><b>core</b><span><code>Node</code> → <code>DagNode</code> → <code>Transform</code> → <code>Joint</code>; <code>wrap</code>, <code>create</code></span></a>
+  <a class="card" href="attribute.html"><b>attribute</b><span><code>Attr</code>: values, lock/keyable flags, <code>&gt;&gt;</code> connections</span></a>
+  <a class="card" href="naming.html"><b>naming</b><span><code>L_arm_ik_ctrl</code>: compose, parse, mirror, conventions</span></a>
+  <a class="card" href="constants.html"><b>constants</b><span>Rotate orders, colors, joint labels, node operations</span></a>
+  <a class="card" href="shapes.html"><b>shapes</b><span>Controller curve shapes</span></a>
+  <a class="card" href="context.html"><b>context</b><span>Undo chunks, keeping the selection, pausing refresh</span></a>
+</div>
+<h3>Helpers</h3>
+<div class="cards">
+  <a class="card" href="joints.html"><b>joints</b><span>Place, zero, aim and orient joints</span></a>
+  <a class="card" href="controls.html"><b>controls</b><span>Controls with zero and offset groups, transform or joint</span></a>
+  <a class="card" href="constraints.html"><b>constraints</b><span>Typed constraints with weights; follow skin weights</span></a>
+  <a class="card" href="spaces.html"><b>spaces</b><span>Space switches</span></a>
+  <a class="card" href="attrs.html"><b>attrs</b><span>Separators, visibility switches, driven keys</span></a>
+  <a class="card" href="connect.html"><b>connect</b><span>Connect and blend transforms, multiply</span></a>
+  <a class="card" href="twist.html"><b>twist</b><span>Swing/twist extraction</span></a>
+  <a class="card" href="deform.html"><b>deform</b><span>Skinning, blend shapes, proximity wraps</span></a>
+  <a class="card" href="scene.html"><b>scene</b><span>End-of-build cleanup and sets</span></a>
+</div>
+
+<h2>Where to go next</h2>
+<ul>
+  <li><a href="concepts.html">Concepts</a> explains how nodes, attributes, naming and undo work, in one page.</li>
+  <li><a href="node.html">node</a> covers the typed node classes and how editor autocomplete works.</li>
+  <li><a href="development.html">Development</a> covers tests, editor setup, regenerating stubs and versioning.</li>
+</ul>

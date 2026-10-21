@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.naming · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link active" aria-current="page" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.naming</div>
+<h1><code>naming</code></h1>
+<p class="lede">Naming convention.</p>
+<p>Names follow <code>[side]{sep}part{sep}part...{sep}suffix</code>, e.g. <code>L_arm_ik_ctrl</code>. The tokens come from the active <code>Convention</code>, so swapping conventions changes every name composed or parsed afterwards, including <code>Side.token</code>.</p>
+<p>This module does not import Maya.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Side">Side</a></li><li><a href="#Convention">Convention</a></li><li><a href="#NameParts">NameParts</a></li><li><a href="#get_convention">get_convention</a></li><li><a href="#set_convention">set_convention</a></li><li><a href="#use_convention">use_convention</a></li><li><a href="#compose">compose</a></li><li><a href="#parse">parse</a></li><li><a href="#mirror">mirror</a></li></ul><div class="api"><div class="api-item" id="Side">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Side"><span class="name">Side</span></a></pre>
+<p class="bases">Bases: <code>Enum</code></p>
+<p>An enumeration.</p>
+<div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>LEFT</code></td><td><code>&#x27;left&#x27;</code></td></tr><tr><td><code>RIGHT</code></td><td><code>&#x27;right&#x27;</code></td></tr><tr><td><code>CENTER</code></td><td><code>&#x27;center&#x27;</code></td></tr></tbody></table></div>
+<div class="members"><div class="member" id="Side.token"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Side.token"><span class="name">token</span></a>: str<span class="kind"></span></pre><p>This side's token in the active convention, e.g. <code>"L"</code>.</p></div><div class="member" id="Side.mirrored"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Side.mirrored"><span class="name">mirrored</span></a>: Side<span class="kind"></span></pre></div><div class="member" id="Side.from_token"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Side.from_token"><span class="name">from_token</span></a>(token: str) -&gt; Side | None</pre><p>The side whose token is <code>token</code>, or None if it is not a side token.</p></div><div class="member" id="Side.from_name"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Side.from_name"><span class="name">from_name</span></a>(name: str) -&gt; Side</pre></div></div>
+</div><div class="api-item" id="Convention">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Convention"><span class="name">Convention</span></a>(
+    left: str = &#x27;L&#x27;,
+    right: str = &#x27;R&#x27;,
+    center: str = &#x27;&#x27;,
+    separator: str = &#x27;_&#x27;,
+)</pre>
+<p>Tokens used to compose and parse names.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>left</code></td><td><code>str</code></td><td><code>&#x27;L&#x27;</code></td><td></td></tr><tr><td><code>right</code></td><td><code>str</code></td><td><code>&#x27;R&#x27;</code></td><td></td></tr><tr><td><code>center</code></td><td><code>str</code></td><td><code>&#x27;&#x27;</code></td><td></td></tr><tr><td><code>separator</code></td><td><code>str</code></td><td><code>&#x27;_&#x27;</code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="NameParts">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#NameParts"><span class="name">NameParts</span></a>(side: Side, parts: tuple[str, ...], suffix: str)</pre>
+<p class="bases">Bases: <code>NamedTuple</code></p>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th></th></tr></thead><tbody><tr><td><code>side</code></td><td><code>Side</code></td><td></td></tr><tr><td><code>parts</code></td><td><code>tuple[str, ...]</code></td><td></td></tr><tr><td><code>suffix</code></td><td><code>str</code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="get_convention"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#get_convention"><span class="name">get_convention</span></a>() -&gt; Convention</pre></div><div class="api-item" id="set_convention"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#set_convention"><span class="name">set_convention</span></a>(convention: Convention) -&gt; None</pre></div><div class="api-item" id="use_convention"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#use_convention"><span class="name">use_convention</span></a>(convention: Convention) -&gt; Generator[Convention, None, None]</pre><p>Temporarily switch the active convention.</p></div><div class="api-item" id="compose"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#compose"><span class="name">compose</span></a>(*parts: str, side: Side = Side.CENTER, suffix: str) -&gt; str</pre><p>Join tokens into a name.</p>
+<div class="section-label">Example</div>
+<pre><code class="language-python">&gt;&gt;&gt; compose("arm", "ik", side=Side.LEFT, suffix="ctrl")
+'L_arm_ik_ctrl'</code></pre></div><div class="api-item" id="parse"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#parse"><span class="name">parse</span></a>(name: str) -&gt; NameParts</pre><p>Split a name into side, parts and suffix.</p>
+<p>DAG paths and namespaces are ignored: <code>|grp|ns:L_arm_ctrl</code> parses as <code>L_arm_ctrl</code>.</p>
+<div class="section-label">Example</div>
+<pre><code class="language-python">&gt;&gt;&gt; parse("L_arm_ik_ctrl")
+NameParts(side=&lt;Side.LEFT: 'left'&gt;, parts=('arm', 'ik'), suffix='ctrl')</code></pre></div><div class="api-item" id="mirror"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#mirror"><span class="name">mirror</span></a>(name: str) -&gt; str</pre><p>Swap the side token: <code>L_arm_ctrl</code> -&gt; <code>R_arm_ctrl</code>.</p></div></div>
+<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>
