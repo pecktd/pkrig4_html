@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
 </head>
 <body>
 <div class="page">
@@ -47,9 +47,11 @@
 <h1><code>context</code></h1>
 <p class="lede">Scene-state context managers.</p>
 <p>Each one also works as a decorator:</p>
-<pre><code class="language-python"></code></pre>
-<p>with undo_chunk("build arm"): ...</p>
-<p>@undo_chunk("build arm") def build_arm(): ...</p>
+<pre><code class="language-python">with undo_chunk("build arm"):
+    ...
+
+@undo_chunk("build arm")
+def build_arm(): ...</code></pre>
 
 <h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#undo_chunk">undo_chunk</a></li><li><a href="#preserve_selection">preserve_selection</a></li><li><a href="#suspend_refresh">suspend_refresh</a></li></ul><div class="api"><div class="api-item" id="undo_chunk"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#undo_chunk"><span class="name">undo_chunk</span></a>(name: str = &#x27;pkrig4&#x27;) -&gt; Generator[None, None, None]</pre><p>Group every edit inside into one undo step.</p></div><div class="api-item" id="preserve_selection"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#preserve_selection"><span class="name">preserve_selection</span></a>() -&gt; Generator[None, None, None]</pre><p>Restore the current selection afterwards, skipping nodes deleted inside.</p></div><div class="api-item" id="suspend_refresh"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#suspend_refresh"><span class="name">suspend_refresh</span></a>() -&gt; Generator[None, None, None]</pre><p>Pause viewport redraws (no-op in batch mode).</p></div></div>
 <footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>

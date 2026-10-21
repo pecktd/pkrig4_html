@@ -112,7 +112,7 @@ h1 {
   letter-spacing: -0.02em;
   margin: 0.3rem 0 1rem;
 }
-h1 code { font-family: var(--font-mono); font-weight: 500; font-size: 0.8em; background: none; padding: 0; }
+main h1 code { font-family: var(--font-mono); font-weight: 500; font-size: 0.8em; background: none; padding: 0; }
 h2 {
   font-size: 1.6rem;
   font-weight: 800;

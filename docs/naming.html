@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
 </head>
 <body>
 <div class="page">
@@ -52,7 +52,7 @@
 <h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Side">Side</a></li><li><a href="#Convention">Convention</a></li><li><a href="#NameParts">NameParts</a></li><li><a href="#get_convention">get_convention</a></li><li><a href="#set_convention">set_convention</a></li><li><a href="#use_convention">use_convention</a></li><li><a href="#compose">compose</a></li><li><a href="#parse">parse</a></li><li><a href="#mirror">mirror</a></li></ul><div class="api"><div class="api-item" id="Side">
 <pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Side"><span class="name">Side</span></a></pre>
 <p class="bases">Bases: <code>Enum</code></p>
-<p>An enumeration.</p>
+
 <div class="table-wrap"><table><thead><tr><th>Member</th><th>Value</th></tr></thead><tbody><tr><td><code>LEFT</code></td><td><code>&#x27;left&#x27;</code></td></tr><tr><td><code>RIGHT</code></td><td><code>&#x27;right&#x27;</code></td></tr><tr><td><code>CENTER</code></td><td><code>&#x27;center&#x27;</code></td></tr></tbody></table></div>
 <div class="members"><div class="member" id="Side.token"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Side.token"><span class="name">token</span></a>: str<span class="kind"></span></pre><p>This side's token in the active convention, e.g. <code>"L"</code>.</p></div><div class="member" id="Side.mirrored"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Side.mirrored"><span class="name">mirrored</span></a>: Side<span class="kind"></span></pre></div><div class="member" id="Side.from_token"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Side.from_token"><span class="name">from_token</span></a>(token: str) -&gt; Side | None</pre><p>The side whose token is <code>token</code>, or None if it is not a side token.</p></div><div class="member" id="Side.from_name"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Side.from_name"><span class="name">from_name</span></a>(name: str) -&gt; Side</pre></div></div>
 </div><div class="api-item" id="Convention">

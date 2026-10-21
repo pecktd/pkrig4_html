@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
 </head>
 <body>
 <div class="page">
@@ -46,8 +46,9 @@
 <div class="eyebrow">pkrig4.deform</div>
 <h1><code>deform</code></h1>
 <p class="lede">Deformer helpers: skinning, blend shapes, wraps and clean duplicates.</p>
-<p>from pkrig4 import deform</p>
-<pre><code class="language-python">skin = deform.bind_skin(jnts, "body_GEO")
+<pre><code class="language-python">from pkrig4 import deform
+
+skin = deform.bind_skin(jnts, "body_GEO")
 deform.connect_bind_pre_matrix(skin, exclude=["tweaker_master_jnt"])
 deform.add_front_blend_shape("facialRig:body_GEO", "body_GEO")
 wrap = deform.proximity_wrap("eyelash_GEO", ["head_GEO"])</code></pre>

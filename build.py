@@ -124,10 +124,16 @@ def _render_entries(lines: list[str]) -> str:
     return f'<dl class="params">{rows}</dl>'
 
 
+def clean(doc: str | None) -> str:
+    """A raw ``__doc__`` with its indentation normalised (as ``inspect.getdoc`` does)."""
+    return inspect.cleandoc(doc) if doc else ""
+
+
 def render_doc(doc: str | None) -> str:
+    """Render already-cleaned docstring text; pass raw ``__doc__`` through :func:`clean`."""
     if not doc:
         return ""
-    lines = inspect.cleandoc(doc).expandtabs().splitlines()
+    lines = doc.expandtabs().splitlines()
     out: list[str] = []
     para: list[str] = []
 
@@ -278,7 +284,8 @@ def signature_or_none(obj: object) -> inspect.Signature | None:
 
 def own_doc(cls: type) -> str | None:
     doc = cls.__dict__.get("__doc__")
-    if not doc or re.fullmatch(rf"{cls.__name__}\(.*\)", doc.strip()):  # NamedTuple default
+    # Placeholders Python writes for undocumented NamedTuples and Enums.
+    if not doc or doc.strip() == "An enumeration." or re.fullmatch(rf"{cls.__name__}\(.*\)", doc.strip()):
         return None
     return doc
 
@@ -309,7 +316,7 @@ def render_member(cls: type, name: str, value: object) -> str | None:
         sig += f": {html.escape(returns)}" if returns else ""
         sig += f'<span class="kind">{settable}</span></pre>'
         doc = value.fget.__doc__ if value.fget else None
-        return f'<div class="member" id="{anchor}">{sig}{render_doc(doc)}</div>'
+        return f'<div class="member" id="{anchor}">{sig}{render_doc(clean(doc))}</div>'
     kind, func = "def", value
     if isinstance(value, staticmethod):
         kind, func = "staticmethod", value.__func__
@@ -318,7 +325,7 @@ def render_member(cls: type, name: str, value: object) -> str | None:
     if not inspect.isfunction(func):
         return None
     sig = render_signature(kind, name, anchor, signature_or_none(func), skip_first=True)
-    return f'<div class="member" id="{anchor}">{sig}{render_doc(func.__doc__)}</div>'
+    return f'<div class="member" id="{anchor}">{sig}{render_doc(clean(func.__doc__))}</div>'
 
 
 def render_class(cls: type) -> str:
@@ -340,7 +347,7 @@ def render_class(cls: type) -> str:
         bases = ["NamedTuple"]
     if bases:
         parts.append(f'<p class="bases">Bases: {", ".join(f"<code>{b}</code>" for b in bases)}</p>')
-    parts.append(render_doc(own_doc(cls)))
+    parts.append(render_doc(clean(own_doc(cls))))
 
     if is_namedtuple or dataclasses.is_dataclass(cls):
         docs = field_docs(cls)
@@ -384,7 +391,7 @@ def render_class(cls: type) -> str:
 
 def render_function(func: object, name: str) -> str:
     sig = render_signature("def", name, name, signature_or_none(func))
-    return f'<div class="api-item" id="{name}">{sig}{render_doc(getattr(func, "__doc__", None))}</div>'
+    return f'<div class="api-item" id="{name}">{sig}{render_doc(clean(getattr(func, "__doc__", None)))}</div>'
 
 
 def render_value(name: str, value: object) -> str:
@@ -429,7 +436,7 @@ LAYOUT = """<!doctype html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v={asset_version}">
 </head>
 <body>
 <div class="page">
@@ -524,6 +531,7 @@ def build(pkrig4_parent: str) -> None:
                     nav=render_nav(slug),
                     body=body,
                     date=date,
+                    asset_version=f"{version}-{date}",  # new URL per build, so browsers never reuse an old stylesheet
                 )
                 (OUTPUT / f"{slug}.html").write_text(page, encoding="utf-8", newline="\n")
                 print(f"  {slug}.html")
