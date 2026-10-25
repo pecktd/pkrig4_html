@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.component · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link active" aria-current="page" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.component</div>
+<h1><code>component</code></h1>
+<p class="lede">Rig components: a naming context, a tagged root group, and named member roles.</p>
+<p>A component (an arm, a leg, an FK chain) subclasses <code>Component</code>. Its root group records which class built it, its side and name, and the pkrig4 version, once. Every node the component makes is linked to the root with a *role*, so tools and error reports can get from any node back to its component, and from a component to its parts, without parsing names.</p>
+<p>Example:</p>
+<pre><code class="language-python">class FkChain(pk.Component):
+    def __init__(self, guides, *, side=pk.Side.CENTER, parent=None):
+        super().__init__("tail", side=side, parent=parent)
+        ctrl_parent = self.root
+        for index, guide in enumerate(guides):
+            jnt = self.joint(str(index + 1), target=guide, role="jnt", index=index)
+            fk = self.control(str(index + 1), "fk", match=jnt, parent=ctrl_parent,
+                              role="fk_ctrl", index=index)
+            constraints.parent_constraint(fk.ctrl, jnt)
+            ctrl_parent = fk.ctrl
+
+info = pk.component_of("tail_2_fk_ctrl")     # from any node back to its component
+info.cls, info.side, info.version, info.role_of("tail_2_fk_ctrl")
+info.members("fk_ctrl")                      # all FK controls, in order</code></pre>
+<p>If a component's <code>__init__</code> raises, the error is re-raised as <code>ComponentBuildError</code> naming the component, its class and the pkrig4 version; the original error is kept as its cause.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Component">Component</a></li><li><a href="#ComponentInfo">ComponentInfo</a></li><li><a href="#ComponentBuildError">ComponentBuildError</a></li><li><a href="#component_of">component_of</a></li><li><a href="#find_components">find_components</a></li></ul><div class="api"><div class="api-item" id="Component">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Component"><span class="name">Component</span></a>(
+    name: str,
+    *,
+    side: Side = Side.CENTER,
+    parent: DagNode | str | None = None,
+)</pre>
+<p>Base class for rig components.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>name</code></dt><dd>Component name, the first name part of everything it makes (<code>"arm"</code> gives <code>L_arm_rig_grp</code>, <code>L_arm_upper_fk_ctrl</code>...).</dd><dt><code>side</code></dt><dd>Side for names and default colors.</dd><dt><code>parent</code></dt><dd>Parent of the root group.</dd></dl>
+<div class="members"><div class="member" id="Component.info"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Component.info"><span class="name">info</span></a>: ComponentInfo<span class="kind"></span></pre><p>Scene-side view of this component (members, roles, metadata).</p></div><div class="member" id="Component.name_for"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Component.name_for"><span class="name">name_for</span></a>(*parts: str, suffix: str) -&gt; str</pre><p>Compose a name inside this component: <code>name_for("upper", suffix="jnt")</code> → <code>L_arm_upper_jnt</code>.</p></div><div class="member" id="Component.add_member"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Component.add_member"><span class="name">add_member</span></a>(member: N, role: str = &#x27;&#x27;, *, index: int | None = None) -&gt; N</pre><p>Link a node to this component, optionally with a role, and return it.</p>
+<p>Roles name what a node is for (<code>"fk_ctrl"</code>, <code>"ik_ctrl"</code>, <code>"pole_vector"</code>). <code>index</code> orders repeated roles: <code>role="fk_ctrl", index=0</code> is stored as <code>"fk_ctrl.0"</code>. Nodes added without a role are still traceable to the component.</p></div><div class="member" id="Component.create"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Component.create"><span class="name">create</span></a>(
+    factory: Callable[..., N],
+    *parts: str,
+    suffix: str,
+    role: str = &#x27;&#x27;,
+    index: int | None = None,
+    **kwargs: Any,
+) -&gt; N</pre><p>Create a node named for this component and link it as a member.</p>
+<p><code>factory</code> is a <code>pkrig4.node</code> type; <code>kwargs</code> go to it:</p>
+<pre><code class="language-python">blend = self.create(node.pairBlend, "upper", suffix="pbl")
+grp = self.create(node.transform, "ik", suffix="grp", parent=self.root)</code></pre></div><div class="member" id="Component.control"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Component.control"><span class="name">control</span></a>(
+    *parts: str,
+    role: str | None = None,
+    index: int | None = None,
+    joint: bool = False,
+    **kwargs: Any,
+) -&gt; controls.Control | controls.JointControl</pre><p><code>controls.create_control</code> named and colored for this component.</p>
+<p>The zero group is parented under the root unless <code>parent=</code> is given. The control is registered with <code>role</code> (default: its name parts joined by <code>_</code>); its offset and zero groups are registered without a role. Other keyword arguments go to <code>controls.create_control</code>.</p></div><div class="member" id="Component.joint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Component.joint"><span class="name">joint</span></a>(
+    *parts: str,
+    target: Transform | str | None = None,
+    parent: DagNode | str | None = None,
+    role: str = &#x27;&#x27;,
+    index: int | None = None,
+) -&gt; node.joint</pre><p>A joint named for this component, at <code>target</code> if given, under the root by default.</p></div></div>
+</div><div class="api-item" id="ComponentInfo">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#ComponentInfo"><span class="name">ComponentInfo</span></a>(root: Node | str)</pre>
+<p>A component found in the scene, read from its root group.</p>
+<div class="members"><div class="member" id="ComponentInfo.cls"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#ComponentInfo.cls"><span class="name">cls</span></a>: str<span class="kind"></span></pre><p>Dotted path of the class that built it, e.g. <code>pkrig4.components.arm.ArmRig</code>.</p></div><div class="member" id="ComponentInfo.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#ComponentInfo.name"><span class="name">name</span></a>: str<span class="kind"></span></pre></div><div class="member" id="ComponentInfo.side"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#ComponentInfo.side"><span class="name">side</span></a>: Side<span class="kind"></span></pre></div><div class="member" id="ComponentInfo.version"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#ComponentInfo.version"><span class="name">version</span></a>: str<span class="kind"></span></pre><p>pkrig4 version that built it.</p></div><div class="member" id="ComponentInfo.all_members"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ComponentInfo.all_members"><span class="name">all_members</span></a>() -&gt; list[tuple[Node, str]]</pre><p>Every linked node with its role (<code>""</code> when it has none), in link order.</p></div><div class="member" id="ComponentInfo.roles"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ComponentInfo.roles"><span class="name">roles</span></a>() -&gt; dict[str, Node]</pre><p>Role → node for every member that has a role.</p></div><div class="member" id="ComponentInfo.member"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ComponentInfo.member"><span class="name">member</span></a>(role: str) -&gt; Node | None</pre><p>The node with exactly this role, e.g. <code>"ik_ctrl"</code> or <code>"fk_ctrl.1"</code>.</p></div><div class="member" id="ComponentInfo.members"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ComponentInfo.members"><span class="name">members</span></a>(role: str) -&gt; list[Node]</pre><p>Nodes with this role, ordered by index: <code>"fk_ctrl"</code> → <code>fk_ctrl.0</code>, <code>fk_ctrl.1</code>, ...</p></div><div class="member" id="ComponentInfo.role_of"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ComponentInfo.role_of"><span class="name">role_of</span></a>(member: Node | str) -&gt; str | None</pre><p>Role of <code>member</code> in this component, or None if it has none or isn't a member.</p></div></div>
+</div><div class="api-item" id="ComponentBuildError">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#ComponentBuildError"><span class="name">ComponentBuildError</span></a></pre>
+<p class="bases">Bases: <code>RuntimeError</code></p>
+<p>A component failed to build; the original error is <code>__cause__</code>.</p>
+</div><div class="api-item" id="component_of"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#component_of"><span class="name">component_of</span></a>(member: Node | str) -&gt; ComponentInfo | None</pre><p>The component a node belongs to (or is the root of), or None.</p></div><div class="api-item" id="find_components"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#find_components"><span class="name">find_components</span></a>(
+    *,
+    cls: type | str | None = None,
+    side: Side | None = None,
+    name: str | None = None,
+) -&gt; list[ComponentInfo]</pre><p>Every component root in the scene, optionally filtered by class, side or name.</p></div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

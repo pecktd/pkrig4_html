@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.components.ik_solvers · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link active" aria-current="page" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.components.ik_solvers</div>
+<h1><code>components.ik_solvers</code></h1>
+<p class="lede">How a <code>Limb</code>'s IK chain reaches its IK end.</p>
+<p>A limb builds its IK joints and its end (wrist, foot roll), then hands the solver the transform the IK end should follow. The solver adds handles (and any helper chains or controls) to the limb and reports what the limb wires up after it: which handles the pole vector drives and which chain stretches.</p>
+<div class="table-wrap"><table><tbody><tr><td><code>RpSolver</code></td><td>One rotate-plane handle from the root to the IK end (arms, legs)</td></tr><tr><td><code>FlexSolver</code></td><td>A driver chain plus a flex control that swings the last joint (digitigrade legs)</td></tr></tbody></table></div>
+<p>Example:</p>
+<pre><code class="language-python">class SpiderLeg(Limb):
+    parts = ("coxa", "femur", "tibia", "tarsus", "tip")
+    bones = 4
+    bone_labels = ("coxa", "femur", "tibia", "tarsus")
+
+    def __init__(self, guides, **kwargs):
+        super().__init__(guides, ik_solver=SpiderSolver(), **kwargs)</code></pre>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#IkSolver">IkSolver</a></li><li><a href="#RpSolver">RpSolver</a></li><li><a href="#FlexSolver">FlexSolver</a></li></ul><div class="api"><div class="api-item" id="IkSolver">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#IkSolver"><span class="name">IkSolver</span></a>()</pre>
+<p>Base class: makes <code>limb.ik_jnts[:limb.bones + 1]</code> reach a target.</p>
+<p><code>build</code> fills in:</p>
+<ul><li><code>pole_handles</code>: rotate-plane handles the limb's pole control drives.</li><li><code>stretch_jnts</code>: the chain whose bone lengths the limb's stretch scales; <code>stretch_jnts[1:limb.bones + 1]</code> are the bones' end joints.</li><li><code>ctrls</code>: extra controls, for the control set.</li></ul>
+<div class="members"><div class="member" id="IkSolver.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#IkSolver.build"><span class="name">build</span></a>(limb: Limb, target: Transform) -&gt; node.ikHandle</pre><p>Solve the chain onto <code>target</code> (it moves with the IK control); return the main handle.</p></div></div>
+</div><div class="api-item" id="RpSolver">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#RpSolver"><span class="name">RpSolver</span></a>()</pre>
+<p class="bases">Bases: <code>IkSolver</code></p>
+<p>One rotate-plane handle from the root to the IK end, under <code>target</code>.</p>
+<div class="members"><div class="member" id="RpSolver.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#RpSolver.build"><span class="name">build</span></a>(limb: Limb, target: Transform) -&gt; node.ikHandle</pre></div></div>
+</div><div class="api-item" id="FlexSolver">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#FlexSolver"><span class="name">FlexSolver</span></a>()</pre>
+<p class="bases">Bases: <code>IkSolver</code></p>
+<p>A digitigrade solve, after pkrig3's <code>ZLegRig</code>: the last bone swings around the IK end.</p>
+<p>A hidden driver chain solves every bone onto the target with one rotate-plane handle; it carries the stretch, and the IK joints copy its bone lengths. <code>flex_ctrl</code> sits at the IK end, turned like the last bone, and follows the driver's last bone. The IK chain is then solved in two parts: a rotate-plane handle up to the last bend joint (the hock), placed the last bone's length back along <code>flex_ctrl</code>, and a single-chain handle for the last bone. Rotating <code>flex_ctrl</code> swings the hock around the end.</p>
+<p>Roles: <code>flex_ctrl</code>, <code>driver_jnt</code> (indexed), <code>driver_ik_handle</code>, <code>flex_ik_handle</code>; <code>ik_handle</code> is the upper handle.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>The limb has fewer than three bones.</dd></dl>
+<div class="members"><div class="member" id="FlexSolver.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#FlexSolver.build"><span class="name">build</span></a>(limb: Limb, target: Transform) -&gt; node.ikHandle</pre></div></div>
+</div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

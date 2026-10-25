@@ -9,12 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
 </head>
 <body>
 <div class="page">
 <aside class="sidebar" id="sidebar">
-<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
 <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
 <nav aria-label="Manual">
 <div class="nav-section">Getting started</div>
@@ -38,6 +38,24 @@
 <a class="nav-link" href="twist.html"><code>twist</code></a>
 <a class="nav-link" href="deform.html"><code>deform</code></a>
 <a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
 <div class="nav-section">Development</div>
 <a class="nav-link" href="development.html">Development</a>
 </nav>
@@ -59,7 +77,7 @@
 &gt;&gt;&gt; ctrl.translateX.connect(other.translateY, force=False)</code></pre>
 <div class="members"><div class="member" id="Attr.from_name"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Attr.from_name"><span class="name">from_name</span></a>(plug: str) -&gt; Attr</pre><p>Build an Attr from a full <code>"node.attr"</code> string.</p></div><div class="member" id="Attr.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.name"><span class="name">name</span></a>: str<span class="kind"></span></pre><p>Full plug name, <code>"node.path"</code>.</p></div><div class="member" id="Attr.attr_name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.attr_name"><span class="name">attr_name</span></a>: str<span class="kind"></span></pre><p>Leaf attribute name without any index, e.g. <code>"worldMatrix"</code>.</p></div><div class="member" id="Attr.exists"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.exists"><span class="name">exists</span></a>: bool<span class="kind"></span></pre></div><div class="member" id="Attr.children"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.children"><span class="name">children</span></a>: list[Attr]<span class="kind"></span></pre></div><div class="member" id="Attr.indices"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.indices"><span class="name">indices</span></a>: list[int]<span class="kind"></span></pre><p>Existing element indices of a multi attribute.</p></div><div class="member" id="Attr.next_index"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.next_index"><span class="name">next_index</span></a>() -&gt; int</pre><p>First index after the highest existing element of a multi attribute.</p></div><div class="member" id="Attr.value"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.value"><span class="name">value</span></a>: Any<span class="kind"> (settable)</span></pre><p>Current value. Numeric compounds come back as a tuple.</p></div><div class="member" id="Attr.set"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.set"><span class="name">set</span></a>(value: Any) -&gt; None</pre><p>Set the value, dispatching on the attribute's data type.</p></div><div class="member" id="Attr.locked"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.locked"><span class="name">locked</span></a>: bool<span class="kind"> (settable)</span></pre></div><div class="member" id="Attr.keyable"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.keyable"><span class="name">keyable</span></a>: bool<span class="kind"> (settable)</span></pre></div><div class="member" id="Attr.channel_box"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.channel_box"><span class="name">channel_box</span></a>: bool<span class="kind"> (settable)</span></pre><p>Visible in the channel box while not keyable.</p></div><div class="member" id="Attr.hide"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.hide"><span class="name">hide</span></a>() -&gt; None</pre><p>Remove from the channel box.</p></div><div class="member" id="Attr.lock_and_hide"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.lock_and_hide"><span class="name">lock_and_hide</span></a>() -&gt; None</pre></div><div class="member" id="Attr.unlock_and_show"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.unlock_and_show"><span class="name">unlock_and_show</span></a>() -&gt; None</pre><p>Undo <code>lock_and_hide</code>: unlocked and keyable again.</p></div><div class="member" id="Attr.connect"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.connect"><span class="name">connect</span></a>(destination: Attr | str, *, force: bool = True) -&gt; None</pre><p>Connect this plug (source) into <code>destination</code>.</p></div><div class="member" id="Attr.disconnect"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.disconnect"><span class="name">disconnect</span></a>(destination: Attr | str | None = None) -&gt; None</pre><p>Disconnect from <code>destination</code>, or from every destination if omitted.</p></div><div class="member" id="Attr.disconnect_input"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Attr.disconnect_input"><span class="name">disconnect_input</span></a>() -&gt; None</pre></div><div class="member" id="Attr.source"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.source"><span class="name">source</span></a>: Attr | None<span class="kind"></span></pre><p>The plug driving this one, if any.</p></div><div class="member" id="Attr.destinations"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Attr.destinations"><span class="name">destinations</span></a>: list[Attr]<span class="kind"></span></pre><p>The plugs this one drives.</p></div></div>
 </div></div>
-<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
 </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

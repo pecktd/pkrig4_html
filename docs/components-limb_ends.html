@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.components.limb_ends · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link active" aria-current="page" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.components.limb_ends</div>
+<h1><code>components.limb_ends</code></h1>
+<p class="lede">What a <code>Limb</code>'s IK control moves at the end of the limb.</p>
+<p>The end is built under <code>limb.ik_ctrl</code> before the IK solve, and returns the transform the IK end joint follows (the solver's target).</p>
+<div class="table-wrap"><table><tbody><tr><td><code>ControlEnd</code></td><td>The IK end follows the IK control and turns with it (wrists)</td></tr><tr><td><code>FootRoll</code></td><td>Heel, toe, bank and ball pivots, with <code>roll</code> and <code>bank</code></td></tr></tbody></table></div>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#LimbEnd">LimbEnd</a></li><li><a href="#ControlEnd">ControlEnd</a></li><li><a href="#FootRoll">FootRoll</a></li></ul><div class="api"><div class="api-item" id="LimbEnd">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#LimbEnd"><span class="name">LimbEnd</span></a>()</pre>
+<p>Base class for limb ends.</p>
+<div class="members"><div class="member" id="LimbEnd.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#LimbEnd.build"><span class="name">build</span></a>(limb: Limb) -&gt; Transform</pre><p>Set up what the IK control moves; return what the IK end joint follows.</p></div></div>
+</div><div class="api-item" id="ControlEnd">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#ControlEnd"><span class="name">ControlEnd</span></a>()</pre>
+<p class="bases">Bases: <code>LimbEnd</code></p>
+<p>The IK end follows the IK control, and the end joint turns with it.</p>
+<div class="members"><div class="member" id="ControlEnd.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#ControlEnd.build"><span class="name">build</span></a>(limb: Limb) -&gt; Transform</pre></div></div>
+</div><div class="api-item" id="FootRoll">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#FootRoll"><span class="name">FootRoll</span></a>(heel: Transform | str, inner: Transform | str, outer: Transform | str)</pre>
+<p class="bases">Bases: <code>LimbEnd</code></p>
+<p>A foot after the IK end: ankle, ball and toe joints, rolled by pivots under the IK control.</p>
+<p>The IK control gets:</p>
+<ul><li><code>roll</code>: below 0 rocks back on the heel; up to <code>rollBreak</code> lifts the heel around the ball; beyond that the whole foot rolls onto the toe tip.</li><li><code>bank</code>: above 0 rolls onto the outer edge, below 0 onto the inner edge.</li><li><code>heelTwist</code>, <code>toeTwist</code>: turn the foot around the heel or the toe tip.</li><li><code>toeBend</code>: bends the toes up (above 0) or down.</li></ul>
+<p>The limb's parts after the IK end must be the ball and the toe tip. Roles: <code>ball_ik_handle</code>, <code>toe_ik_handle</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>heel</code></dt><dd>Guide at the back of the heel, on the ground.</dd><dt><code>inner</code></dt><dd>Guide on the inner edge of the foot.</dd><dt><code>outer</code></dt><dd>Guide on the outer edge of the foot.</dd></dl>
+<div class="members"><div class="member" id="FootRoll.build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#FootRoll.build"><span class="name">build</span></a>(limb: Limb) -&gt; Transform</pre></div></div>
+</div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

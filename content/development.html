@@ -6,6 +6,7 @@
 <p>The suite runs headless in mayapy and takes about a second:</p>
 <pre><code class="language-python">"C:/Program Files/Autodesk/Maya2024/bin/mayapy.exe" tests/run.py [-v] [pattern]</code></pre>
 <p><code>tests/run.py</code> starts Maya, makes sure it imports <em>this</em> checkout of pkrig4 (a <code>userSetup.py</code> may already have imported another one), runs every <code>tests/test_*.py</code> with <code>unittest</code>, and exits non-zero on failure. Each test starts from an empty scene.</p>
+<p>The workspace window's tests run offscreen in the same mayapy run. <code>tests/run.py</code> creates the <code>QApplication</code> before Maya starts, because <code>maya.standalone</code> would otherwise make one that can't hold widgets. Maya 2024 ships PySide2. To check the window's Qt 6 code paths (Maya 2025+) without a newer Maya, run <code>python tests/qt6_smoke.py</code> with any Python that has PySide6.</p>
 <div class="callout warn"><p>If <code>PYTHONPATH</code> contains a folder of Maya <em>completion stubs</em>, mayapy imports those instead of the real <code>maya.cmds</code>, and every call returns <code>None</code>. <code>tests/run.py</code> detects this and stops with the path to remove.</p></div>
 
 <h2 id="editor">Editor setup</h2>

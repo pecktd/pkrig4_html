@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.data_io · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link active" aria-current="page" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.data_io</div>
+<h1><code>data_io</code></h1>
+<p class="lede">Write rig data to files and read it back in a build.</p>
+<p>Every kind of data is a <code>DataType</code> subclass with the same two methods: <code>write(path=None, nodes=None)</code> saves from the scene, <code>read(path=None, nodes=None)</code> applies to the scene. Paths may leave out the extension, and relative paths start at the open scene's folder, so a workspace's <code>build.py</code> names files next to it.</p>
+<div class="table-wrap"><table><thead><tr><th>Class</th><th>Default file</th><th>Data</th></tr></thead><tbody><tr><td><code>Curves</code></td><td>control.crv</td><td>Control curve shapes, color, width</td></tr><tr><td><code>Skin</code></td><td>weights.skinPack</td><td>Skin weights, one <code>.skin</code> per mesh</td></tr><tr><td><code>NgLayers</code></td><td>ngLayers.ngPack</td><td>ngSkinTools2 layers, one file per mesh</td></tr><tr><td><code>BlendShapes</code></td><td>blendShapes.blendPack</td><td>blendShape nodes, one <code>.blend</code> each</td></tr><tr><td><code>Skeleton</code></td><td>skeleton.skel</td><td>Joint hierarchies</td></tr><tr><td><code>Values</code></td><td>values.attr</td><td>Keyable attribute values</td></tr><tr><td><code>Shading</code></td><td>shading.shadingPack</td><td>Shading networks and assignments</td></tr><tr><td><code>MayaFile</code></td><td>scene.ma</td><td>Maya ASCII export / import</td></tr><tr><td><code>Fbx</code></td><td>guide.fbx</td><td>FBX export / import</td></tr><tr><td><code>Alembic</code></td><td>model.abc</td><td>Alembic export / import</td></tr></tbody></table></div>
+<p><code>data_types</code> lists every registered type (for tools and UIs); <code>files</code> holds the shared path, JSON and read-log helpers.</p>
+<p>Example:</p>
+<pre><code class="language-python">from pkrig4 import data_io
+
+data_io.files.start_log()             # build.dep lists every file read
+# ... build the rig ...
+data_io.Curves().read()
+data_io.Skin().read()
+
+for name, data_type in data_io.data_types().items():
+    data_type().write()               # export everything</code></pre>
+
+<h2 id="reference">Reference</h2><p class="modules">Modules: <code>data_io.base</code>, <code>data_io.blend_shapes</code>, <code>data_io.curves</code>, <a href="data_io-files.html"><code>data_io.files</code></a>, <code>data_io.ng_layers</code>, <code>data_io.scene_files</code>, <code>data_io.shading</code>, <code>data_io.skeleton</code>, <code>data_io.skin</code>, <code>data_io.values</code></p><ul class="toc-inline"><li><a href="#DataType">DataType</a></li><li><a href="#Curves">Curves</a></li><li><a href="#Skin">Skin</a></li><li><a href="#NgLayers">NgLayers</a></li><li><a href="#BlendShapes">BlendShapes</a></li><li><a href="#Skeleton">Skeleton</a></li><li><a href="#Values">Values</a></li><li><a href="#Shading">Shading</a></li><li><a href="#SceneFile">SceneFile</a></li><li><a href="#MayaFile">MayaFile</a></li><li><a href="#Fbx">Fbx</a></li><li><a href="#Alembic">Alembic</a></li><li><a href="#data_types">data_types</a></li><li><a href="#data_type_for">data_type_for</a></li></ul><div class="api"><div class="api-item" id="DataType">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#DataType"><span class="name">DataType</span></a>()</pre>
+<p class="bases">Bases: <code>ABC</code></p>
+<p>One kind of rig data, saved to and loaded from one file or folder.</p>
+<p>Subclasses set the class attributes and implement <code>write</code> and <code>read</code>. Options go to <code>__init__</code>, so <code>write</code> and <code>read</code> keep the same signature in every subclass.</p>
+<div class="members"><div class="member" id="DataType.path"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DataType.path"><span class="name">path</span></a>(path: files.PathLike | None = None) -&gt; Path</pre><p>Absolute path for <code>path</code>, adding <code>extension</code> if it has none.</p>
+<p><code>None</code> means <code>default_name</code>; relative paths start at the scene's folder (see <code>resolve</code>).</p></div><div class="member" id="DataType.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DataType.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Save data from the scene; return the file or folder written.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>path</code></dt><dd>Where to write; see <code>path</code>.</dd><dt><code>nodes</code></dt><dd>What to save; each data type documents its default.</dd></dl></div><div class="member" id="DataType.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#DataType.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Apply saved data to the scene; return the names of what changed.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>path</code></dt><dd>Where to read from; see <code>path</code>.</dd><dt><code>nodes</code></dt><dd>Only apply data to these; default everything in the file.</dd></dl></div></div>
+</div><div class="api-item" id="Curves">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Curves"><span class="name">Curves</span></a>(*, keep_missing: bool = False)</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Control curve shapes, one file for the whole rig.</p>
+<div class="members"><div class="member" id="Curves.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Curves.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write the curve shapes of <code>nodes</code> (default: <code>controls</code>).</p></div><div class="member" id="Curves.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Curves.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Apply the saved shapes to the controls they name; return the controls changed.</p>
+<p>A control not found by its full path is looked up by its short name, so the file survives regrouping. Controls missing from the scene are skipped. Shapes are added or deleted so each control ends with as many as the file.</p></div></div>
+</div><div class="api-item" id="Skin">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Skin"><span class="name">Skin</span></a>(*, influences: Mapping[str, str] | None = None)</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Skin weights: a folder with one <code>.skin</code> file per skinned geometry.</p>
+<div class="members"><div class="member" id="Skin.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Skin.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write a <code>.skin</code> file for each skinned geometry in <code>nodes</code>.</p>
+<p><code>nodes</code> are transforms or shapes and default to <code>skinned_geometries</code>; geometry without a skinCluster is skipped. Files are named after the geometry's transform.</p></div><div class="member" id="Skin.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Skin.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Bind every <code>.skin</code> file in the folder; return the new skinClusters.</p>
+<p><code>nodes</code> limits binding to files whose geometry is one of them. Geometry is found by its full path, else by its short name if that is unique. Files whose geometry is missing are skipped with a warning.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>An influence is missing, or the vertex count changed.</dd></dl></div></div>
+</div><div class="api-item" id="NgLayers">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#NgLayers"><span class="name">NgLayers</span></a>(
+    *,
+    vertex_transfer: VertexTransfer = &#x27;vertexId&#x27;,
+    match_by_distance: bool = False,
+)</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>ngSkinTools2 layers: a folder with one ngSkinTools JSON file per geometry.</p>
+<div class="members"><div class="member" id="NgLayers.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#NgLayers.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Export the layers of each geometry in <code>nodes</code> (default: <code>layered_geometries</code>).</p>
+<p>Geometry without ngSkinTools layers is skipped; save its plain weights with <code>Skin</code>.</p></div><div class="member" id="NgLayers.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#NgLayers.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Import every file in the folder; return the geometries given layers.</p>
+<p><code>nodes</code> limits the read to those geometries. A file whose geometry isn't in the scene (or isn't unique) is skipped with a warning.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>An influence in a file is missing from the scene.</dd></dl></div></div>
+</div><div class="api-item" id="BlendShapes">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#BlendShapes"><span class="name">BlendShapes</span></a>()</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>blendShape nodes: a folder with one <code>.blend</code> file per node.</p>
+<div class="members"><div class="member" id="BlendShapes.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BlendShapes.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write a <code>.blend</code> file for each blendShape node on <code>nodes</code>.</p>
+<p><code>nodes</code> are geometry transforms or shapes and default to every blendShape node in the scene. Files are named after the node.</p></div><div class="member" id="BlendShapes.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BlendShapes.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Build every <code>.blend</code> file in the folder; return the blendShape nodes.</p>
+<p><code>nodes</code> limits the read to files that deform one of them. A node with the same name is replaced. Files whose geometry is missing are skipped with a warning.</p></div></div>
+</div><div class="api-item" id="Skeleton">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Skeleton"><span class="name">Skeleton</span></a>()</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Joint hierarchies, one file for any number of roots.</p>
+<div class="members"><div class="member" id="Skeleton.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Skeleton.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write each root joint in <code>nodes</code> and every joint below it.</p>
+<p><code>nodes</code> defaults to <code>root_joints</code>.</p></div><div class="member" id="Skeleton.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Skeleton.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Create or move the saved joints; return their names.</p>
+<p><code>nodes</code> limits the read to those joints. A joint that already exists is moved, not duplicated. A parent missing from the scene leaves the joint at the world root.</p></div></div>
+</div><div class="api-item" id="Values">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Values"><span class="name">Values</span></a>()</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Attribute values, one file for any number of nodes.</p>
+<div class="members"><div class="member" id="Values.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Values.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write the keyable, unlocked, single-value channels of <code>nodes</code>.</p>
+<p><code>nodes</code> defaults to the selection. Keys are <code>node.attribute</code>, using each node's shortest unique name.</p></div><div class="member" id="Values.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Values.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Set the saved values; return the plugs set.</p>
+<p><code>nodes</code> limits the values set to those nodes. Plugs that no longer exist, or are locked or connected, are skipped.</p></div></div>
+</div><div class="api-item" id="Shading">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Shading"><span class="name">Shading</span></a>()</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Shading groups, their networks and their members.</p>
+<div class="members"><div class="member" id="Shading.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Shading.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Write the shading groups used by <code>nodes</code> (default: every one in use).</p>
+<p><code>nodes</code> are geometry transforms; only their members are recorded.</p></div><div class="member" id="Shading.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Shading.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Import the shaders and assign them; return the shading groups assigned.</p>
+<p><code>nodes</code> limits the assignments to those transforms. Members are found by full path, else by short name if that is unique; missing members are skipped.</p></div></div>
+</div><div class="api-item" id="SceneFile">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#SceneFile"><span class="name">SceneFile</span></a>(*, namespace: str | None = None, parent: DagNode | str | None = None)</pre>
+<p class="bases">Bases: <code>DataType</code></p>
+<p>Base for whole-file formats; subclasses export one file and import one.</p>
+<div class="members"><div class="member" id="SceneFile.write"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#SceneFile.write"><span class="name">write</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; Path</pre><p>Export <code>nodes</code> and everything below them (default: <code>top_nodes</code>).</p></div><div class="member" id="SceneFile.read"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#SceneFile.read"><span class="name">read</span></a>(
+    path: files.PathLike | None = None,
+    nodes: Iterable[Node | str] | None = None,
+) -&gt; list[str]</pre><p>Import the file; return the full paths of its new top-level nodes.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>TypeError</code></dt><dd><code>nodes</code> was given; a file is imported whole.</dd><dt><code>FileNotFoundError</code></dt><dd>The file doesn't exist.</dd></dl></div></div>
+</div><div class="api-item" id="MayaFile">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#MayaFile"><span class="name">MayaFile</span></a>(*, namespace: str | None = None, parent: DagNode | str | None = None)</pre>
+<p class="bases">Bases: <code>SceneFile</code></p>
+<p>Maya ASCII (<code>.ma</code>).</p>
+</div><div class="api-item" id="Fbx">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Fbx"><span class="name">Fbx</span></a>(*, namespace: str | None = None, parent: DagNode | str | None = None)</pre>
+<p class="bases">Bases: <code>SceneFile</code></p>
+<p>FBX (<code>.fbx</code>): meshes, joints and transforms without animation.</p>
+</div><div class="api-item" id="Alembic">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Alembic"><span class="name">Alembic</span></a>(
+    *,
+    frame_range: tuple[float, float] | None = None,
+    namespace: str | None = None,
+    parent: DagNode | str | None = None,
+)</pre>
+<p class="bases">Bases: <code>SceneFile</code></p>
+<p>Alembic (<code>.abc</code>), in world space with UVs.</p>
+</div><div class="api-item" id="data_types"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#data_types"><span class="name">data_types</span></a>() -&gt; dict[str, type[DataType]]</pre><p>Every registered data type, keyed by lowercase label.</p></div><div class="api-item" id="data_type_for"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#data_type_for"><span class="name">data_type_for</span></a>(path: files.PathLike) -&gt; type[DataType] | None</pre><p>The data type whose extension <code>path</code> has, if any.</p></div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

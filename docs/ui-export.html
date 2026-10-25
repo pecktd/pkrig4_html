@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.ui.export · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link active" aria-current="page" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.ui.export</div>
+<h1><code>ui.export</code></h1>
+<p class="lede">Exporting from the Maya selection: what it can write, where to, and what that changes; no Qt.</p>
+<p>The workspace window's Export panel shows one <code>ExportOption</code> per kind of data the selection has: skin weights, ngSkinTools layers and blend shapes of the selected meshes (or every mesh under a selected group), values of the selected nodes, the selected joints' skeleton. Control shapes don't need a selection: they're always every control in the scene.</p>
+<p>Example:</p>
+<pre><code class="language-python">from pkrig4.ui import export
+
+for option in export.options_for_selection():
+    target = export.default_target(option, workspace_folder)
+    text, replaced = export.preview(option, target)   # "replaces Body_Geo.skin · adds Hair_Geo.skin"
+    export.run(option, target)</code></pre>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#ExportOption">ExportOption</a></li><li><a href="#options_for_selection">options_for_selection</a></li><li><a href="#targets">targets</a></li><li><a href="#default_target">default_target</a></li><li><a href="#preview">preview</a></li><li><a href="#run">run</a></li></ul><div class="api"><div class="api-item" id="ExportOption">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#ExportOption"><span class="name">ExportOption</span></a>(
+    key: str,
+    label: str,
+    data_type: type[DataType],
+    nodes: list[str] | None,
+    summary: str,
+    files: list[str],
+    make: Callable[[], DataType],
+    checked: bool = True,
+)</pre>
+<p>One kind of data to export, with the nodes it comes from.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>key</code></td><td><code>str</code></td><td><code></code></td><td>The data type's registry key, e.g. <code>"skin"</code>.</td></tr><tr><td><code>label</code></td><td><code>str</code></td><td><code></code></td><td></td></tr><tr><td><code>data_type</code></td><td><code>type[DataType]</code></td><td><code></code></td><td></td></tr><tr><td><code>nodes</code></td><td><code>list[str] | None</code></td><td><code></code></td><td>What to write; None means everything (control shapes).</td></tr><tr><td><code>summary</code></td><td><code>str</code></td><td><code></code></td><td>What's being exported, e.g. <code>"2 meshes with skinClusters"</code>.</td></tr><tr><td><code>files</code></td><td><code>list[str]</code></td><td><code></code></td><td>The files it writes inside a pack, e.g. <code>["Body_Geo.skin"]</code>; empty for one-file types.</td></tr><tr><td><code>make</code></td><td><code>Callable[[], DataType]</code></td><td><code></code></td><td>Makes the data type instance that writes.</td></tr><tr><td><code>checked</code></td><td><code>bool</code></td><td><code>True</code></td><td>Included in "Export checked" by default. Values aren't: a values file is a
+deliberate set of attributes, not something every selection should write.</td></tr></tbody></table></div>
+<div class="members"><div class="member" id="ExportOption.extension"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#ExportOption.extension"><span class="name">extension</span></a>: str<span class="kind"></span></pre></div></div>
+</div><div class="api-item" id="options_for_selection"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#options_for_selection"><span class="name">options_for_selection</span></a>() -&gt; list[ExportOption]</pre><p>What the current selection (and the scene, for control shapes) can export.</p></div><div class="api-item" id="targets"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#targets"><span class="name">targets</span></a>(option: ExportOption, workspace: str | Path) -&gt; list[Path]</pre><p>The workspace's existing files or packs of the option's type, naturally sorted.</p></div><div class="api-item" id="default_target"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#default_target"><span class="name">default_target</span></a>(
+    option: ExportOption,
+    workspace: str | Path,
+    *,
+    selected: Path | None = None,
+    last: Path | None = None,
+    build_paths: Mapping[str, Path] | None = None,
+) -&gt; Path</pre><p>Where to export by default.</p>
+<p>In order: the file selected in the window if it's this type; the last target used for this type; the file the build reads for this type; the type's default name in the workspace.</p></div><div class="api-item" id="preview"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#preview"><span class="name">preview</span></a>(option: ExportOption, target: Path) -&gt; tuple[str, list[str]]</pre><p>What exporting to <code>target</code> changes, and the existing files it replaces.</p>
+<p>Control shapes update the controls they write and keep the rest, so they replace nothing the window needs to ask about.</p></div><div class="api-item" id="run"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#run"><span class="name">run</span></a>(option: ExportOption, target: Path) -&gt; str</pre><p>Export; return the status-bar message.</p></div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

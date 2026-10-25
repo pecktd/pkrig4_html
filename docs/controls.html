@@ -9,12 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
 </head>
 <body>
 <div class="page">
 <aside class="sidebar" id="sidebar">
-<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
 <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
 <nav aria-label="Manual">
 <div class="nav-section">Getting started</div>
@@ -38,6 +38,24 @@
 <a class="nav-link" href="twist.html"><code>twist</code></a>
 <a class="nav-link" href="deform.html"><code>deform</code></a>
 <a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
 <div class="nav-section">Development</div>
 <a class="nav-link" href="development.html">Development</a>
 </nav>
@@ -80,7 +98,7 @@ ik = controls.create_control("arm", "ik", side=Side.LEFT, joint=True, match=wris
 ) -&gt; Control | JointControl</pre><p>Create a control under offset and zero groups.</p>
 <div class="section-label">Args</div>
 <dl class="params"><dt><code>*parts</code></dt><dd>Name parts, e.g. <code>"arm", "fk"</code> → <code>L_arm_fk_ctrl</code>.</dd><dt><code>side</code></dt><dd>Side token for the name, and the default color.</dd><dt><code>shape</code></dt><dd>Curve shape from <code>pkrig4.shapes</code>.</dd><dt><code>size</code></dt><dd>Uniform scale applied to the shape's CVs.</dd><dt><code>color</code></dt><dd>Index color; defaults to <code>side_color</code>.</dd><dt><code>parent</code></dt><dd>Parent for the zero group.</dd><dt><code>match</code></dt><dd>Transform to snap to. A transform control's zero group takes its position and orientation. A joint control's zero group takes only the position, and the control's orientation goes into its <code>jointOrient</code>, so its rotate channels read zero at rest.</dd><dt><code>locked</code></dt><dd>Attributes to lock and hide on the control.</dd><dt><code>joint</code></dt><dd>Build the control as a joint (bone display hidden, radius locked) instead of a transform; returns a <code>JointControl</code>. Use it for IK controls that must align to a joint while keeping clean rotate values.</dd></dl></div><div class="api-item" id="set_color"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#set_color"><span class="name">set_color</span></a>(transform: DagNode | str, color: Color | int) -&gt; None</pre><p>Set the override color on every shape under <code>transform</code>.</p></div></div>
-<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
 </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

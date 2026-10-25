@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.ui.model · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link active" aria-current="page" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.ui.model</div>
+<h1><code>ui.model</code></h1>
+<p class="lede">What the workspace window shows, worked out from the files on disk; no Qt here.</p>
+<p>Example:</p>
+<pre><code class="language-python">from pkrig4.ui import model
+
+folder = "D:/proj/fuji4/assets/eggPawn/work/rig/default"
+for info in model.find_workspaces(folder):
+    info.name, info.kind, info.stage        # "layout5", "pkrig3", "Layout"
+for group in model.scan_files(f"{folder}/layout5"):
+    group.label, [entry.name for entry in group.entries]
+model.next_version(f"{folder}/layout5", "skin")   # "skin_2.ma"</code></pre>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#WorkspaceInfo">WorkspaceInfo</a></li><li><a href="#FileEntry">FileEntry</a></li><li><a href="#work_stem">work_stem</a></li><li><a href="#work_stems">work_stems</a></li><li><a href="#Group">Group</a></li><li><a href="#find_workspaces">find_workspaces</a></li><li><a href="#build_kind">build_kind</a></li><li><a href="#stage_of">stage_of</a></li><li><a href="#natural_key">natural_key</a></li><li><a href="#scan_files">scan_files</a></li><li><a href="#legacy_label">legacy_label</a></li><li><a href="#used_files">used_files</a></li><li><a href="#next_version">next_version</a></li><li><a href="#next_workspace_name">next_workspace_name</a></li><li><a href="#read_notes">read_notes</a></li><li><a href="#write_note">write_note</a></li><li><a href="#variant_folder_of">variant_folder_of</a></li></ul><div class="api"><div class="api-item" id="WorkspaceInfo">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#WorkspaceInfo"><span class="name">WorkspaceInfo</span></a>(path: Path, kind: str)</pre>
+<p>A workspace folder as the window lists it.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>path</code></td><td><code>Path</code></td><td><code></code></td><td></td></tr><tr><td><code>kind</code></td><td><code>str</code></td><td><code></code></td><td><code>"pkrig4"</code>, <code>"pkrig3"</code>, <code>"megarig"</code> or <code>"unknown"</code>: what its <code>build.py</code> imports.</td></tr></tbody></table></div>
+<div class="members"><div class="member" id="WorkspaceInfo.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#WorkspaceInfo.name"><span class="name">name</span></a>: str<span class="kind"></span></pre></div><div class="member" id="WorkspaceInfo.stage"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#WorkspaceInfo.stage"><span class="name">stage</span></a>: str<span class="kind"></span></pre></div><div class="member" id="WorkspaceInfo.is_pkrig4"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#WorkspaceInfo.is_pkrig4"><span class="name">is_pkrig4</span></a>: bool<span class="kind"></span></pre></div></div>
+</div><div class="api-item" id="FileEntry">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#FileEntry"><span class="name">FileEntry</span></a>(path: Path, data_type: type[DataType] | None, used: bool = False)</pre>
+<p>A file or pack in a workspace.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>path</code></td><td><code>Path</code></td><td><code></code></td><td></td></tr><tr><td><code>data_type</code></td><td><code>type[DataType] | None</code></td><td><code></code></td><td>The pkrig4 data type for its extension, or None (scripts, legacy formats).</td></tr><tr><td><code>used</code></td><td><code>bool</code></td><td><code>False</code></td><td>The last build read it (it's in <code>build.dep</code>).</td></tr></tbody></table></div>
+<div class="members"><div class="member" id="FileEntry.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#FileEntry.name"><span class="name">name</span></a>: str<span class="kind"></span></pre></div><div class="member" id="FileEntry.members"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#FileEntry.members"><span class="name">members</span></a>: list[str]<span class="kind"></span></pre><p>The files in a pack folder, sorted; empty for a plain file.</p></div></div>
+</div><div class="api-item" id="work_stem"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#work_stem"><span class="name">work_stem</span></a>(name: str) -&gt; str | None</pre><p>The stem of a numbered work scene: <code>skin_51.ma</code> → <code>"skin"</code>; None for others.</p></div><div class="api-item" id="work_stems"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#work_stems"><span class="name">work_stems</span></a>(workspace: str | Path) -&gt; list[str]</pre><p>The stems of a workspace's numbered work scenes, sorted.</p></div><div class="api-item" id="Group">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Group"><span class="name">Group</span></a>(key: str, label: str, entries: list[FileEntry] = &lt;factory&gt;)</pre>
+<p>Files of one kind, in the order the window lists groups.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>key</code></td><td><code>str</code></td><td><code></code></td><td></td></tr><tr><td><code>label</code></td><td><code>str</code></td><td><code></code></td><td></td></tr><tr><td><code>entries</code></td><td><code>list[FileEntry]</code></td><td><code></code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="find_workspaces"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#find_workspaces"><span class="name">find_workspaces</span></a>(folder: str | Path) -&gt; list[WorkspaceInfo]</pre><p>The workspaces in a variant folder: sub-folders with a <code>build.py</code>, naturally sorted.</p></div><div class="api-item" id="build_kind"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#build_kind"><span class="name">build_kind</span></a>(build_file: str | Path) -&gt; str</pre><p>Which rigging system a <code>build.py</code> is written for, from its first import of one.</p></div><div class="api-item" id="stage_of"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#stage_of"><span class="name">stage_of</span></a>(name: str) -&gt; str</pre><p>The stage a workspace name starts with: <code>peckAnim5</code> → <code>"Anim"</code>, <code>layout2</code> → <code>"Layout"</code>.</p></div><div class="api-item" id="natural_key"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#natural_key"><span class="name">natural_key</span></a>(text: str) -&gt; list</pre><p>Sort key that orders numbers by value: <code>anim2</code> before <code>anim10</code>.</p></div><div class="api-item" id="scan_files"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#scan_files"><span class="name">scan_files</span></a>(workspace: str | Path) -&gt; list[Group]</pre><p>A workspace's files grouped by kind; empty groups are left out.</p>
+<p>Maya, FBX and Alembic files, <code>build.ma</code> and numbered work scenes included, are one "Scenes" group sorted by name (<code>skin_2</code> before <code>skin_10</code>). Names starting with <code>.</code> or <code>_</code> and plain folders are skipped, as are <code>__pycache__</code> and <code>build.dep</code>.</p></div><div class="api-item" id="legacy_label"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#legacy_label"><span class="name">legacy_label</span></a>(path: str | Path) -&gt; str</pre><p>What a file that isn't pkrig4 data is, e.g. <code>"pkrig3 animation"</code>.</p></div><div class="api-item" id="used_files"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#used_files"><span class="name">used_files</span></a>(workspace: str | Path) -&gt; set[Path]</pre><p>Files and packs the last build read, from <code>build.dep</code>.</p>
+<p>A file inside a pack (<code>weights.skinPack/Body_Geo.skin</code>) marks the pack.</p></div><div class="api-item" id="next_version"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#next_version"><span class="name">next_version</span></a>(workspace: str | Path, stem: str) -&gt; str</pre><p>The next free work-scene name for <code>stem</code>: <code>skin_51.ma</code> → <code>skin_52.ma</code>.</p></div><div class="api-item" id="next_workspace_name"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#next_workspace_name"><span class="name">next_workspace_name</span></a>(name: str, taken: Iterable[str] = ()) -&gt; str</pre><p>The next version of a workspace name: <code>layout5</code> → <code>layout6</code>, <code>body</code> → <code>body2</code>.</p></div><div class="api-item" id="read_notes"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#read_notes"><span class="name">read_notes</span></a>(workspace: str | Path) -&gt; dict[str, str]</pre><p>The workspace's notes by file name.</p></div><div class="api-item" id="write_note"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#write_note"><span class="name">write_note</span></a>(workspace: str | Path, name: str, text: str) -&gt; None</pre><p>Set or clear (empty <code>text</code>) the note for one file.</p></div><div class="api-item" id="variant_folder_of"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#variant_folder_of"><span class="name">variant_folder_of</span></a>(scene: str | Path) -&gt; tuple[Path, str] | None</pre><p>The variant folder and workspace name of a scene saved in a workspace, or None.</p></div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

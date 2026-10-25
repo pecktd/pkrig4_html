@@ -9,12 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
 </head>
 <body>
 <div class="page">
 <aside class="sidebar" id="sidebar">
-<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
 <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
 <nav aria-label="Manual">
 <div class="nav-section">Getting started</div>
@@ -38,6 +38,24 @@
 <a class="nav-link" href="twist.html"><code>twist</code></a>
 <a class="nav-link" href="deform.html"><code>deform</code></a>
 <a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
 <div class="nav-section">Development</div>
 <a class="nav-link" href="development.html">Development</a>
 </nav>
@@ -66,6 +84,9 @@ spaces.add_space_switch(
 <p class="bases">Bases: <code>NamedTuple</code></p>
 
 <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th></th></tr></thead><tbody><tr><td><code>attr</code></td><td><code>Attr</code></td><td>Enum attribute on the controller.</td></tr><tr><td><code>targets</code></td><td><code>list[node.transform]</code></td><td>One group per space, parented under that space.</td></tr><tr><td><code>conditions</code></td><td><code>list[node.condition]</code></td><td></td></tr><tr><td><code>constraint</code></td><td><code>Node</code></td><td></td></tr></tbody></table></div>
+<div class="members"><div class="member" id="SpaceSwitch.labels"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#SpaceSwitch.labels"><span class="name">labels</span></a>: list[str]<span class="kind"></span></pre><p>Space labels in enum order, <code>local</code> first when it was included.</p></div><div class="member" id="SpaceSwitch.select"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#SpaceSwitch.select"><span class="name">select</span></a>(label: str) -&gt; None</pre><p>Pick a space by its label: <code>arm.ik_space.select("world")</code>.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>No space has that label.</dd></dl></div></div>
 </div><div class="api-item" id="add_space_switch"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#add_space_switch"><span class="name">add_space_switch</span></a>(
     driven: Transform | str,
     spaces: Sequence[tuple[DagNode | str, str]],
@@ -77,7 +98,7 @@ spaces.add_space_switch(
 ) -&gt; SpaceSwitch</pre><p>Constrain <code>driven</code> to a choice of spaces picked by an enum on <code>controller</code>.</p>
 <div class="section-label">Args</div>
 <dl class="params"><dt><code>driven</code></dt><dd>Transform that follows the chosen space, usually a control's zero group.</dd><dt><code>spaces</code></dt><dd><code>(space, label)</code> pairs.</dd><dt><code>controller</code></dt><dd>Node that gets the enum attribute.</dd><dt><code>kind</code></dt><dd><code>"parent"</code>, <code>"orient"</code> or <code>"point"</code>; also names the attribute (<code>parentTo</code>, <code>orientTo</code>, <code>pointTo</code>).</dd><dt><code>include_local</code></dt><dd>Prepend <code>driven</code>'s current parent as a <code>local</code> space.</dd><dt><code>default</code></dt><dd>Index of the space selected at build time.</dd></dl></div></div>
-<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
 </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

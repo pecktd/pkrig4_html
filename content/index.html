@@ -1,6 +1,8 @@
 <div class="eyebrow">Manual · version {version}</div>
 <h1>pkrig4</h1>
-<p class="lede">The core of a Maya rigging framework: typed node and attribute wrappers with editor autocomplete, a naming convention, controller shapes, and the rigging helpers build scripts reach for most often.</p>
+<p class="lede">A Maya rigging framework: typed node and attribute wrappers with editor autocomplete, the rigging helpers build scripts reach for most often, rig data I/O, step-based workspace builds, body components, and a workspace window for working in Maya.</p>
+
+<div class="callout info"><p><b>0.1.0 is the first beta.</b> The API can still change between minor versions before 1.0; each change is listed in the release notes.</p></div>
 
 <pre><code class="language-python">import pkrig4 as pk
 from pkrig4 import constraints, controls, joints, node, scene, shapes, spaces
@@ -21,6 +23,21 @@ md.op.value = pk.MultiplyDivideOp.DIVIDE
 
 scene.delete_if_exists("guide_grp")
 scene.set_joint_radius(0.2)</code></pre>
+
+<p>A workspace's <code>build.py</code> is a <code>Builder</code> with steps; the workspace window builds it, step by step if you like, and exports the selection's data into the workspace:</p>
+<pre><code class="language-python">from pkrig4 import builder, data_io
+from pkrig4.templates import BipedBuild
+
+class Build(BipedBuild):
+    data = (data_io.Curves(), data_io.Skin())
+
+    @builder.step(after="head")
+    def tail(self):
+        ...
+
+# In Maya:
+from pkrig4 import ui
+ui.show()</code></pre>
 
 <h2>Install</h2>
 <p>pkrig4 needs Maya 2024 or later (Python 3.10+). Put the folder that <em>contains</em> <code>pkrig4</code> on Maya's Python path, for example in <code>userSetup.py</code> or <code>Maya.env</code>:</p>
@@ -54,10 +71,26 @@ print(pk.__version__)</code></pre>
   <a class="card" href="deform.html"><b>deform</b><span>Skinning, blend shapes, proximity wraps</span></a>
   <a class="card" href="scene.html"><b>scene</b><span>End-of-build cleanup and sets</span></a>
 </div>
+<h3>Data, builds and components</h3>
+<div class="cards">
+  <a class="card" href="data_io.html"><b>data_io</b><span>Skin weights, ngSkinTools layers, blend shapes, control shapes, values, skeletons, shading, scene files</span></a>
+  <a class="card" href="builder.html"><b>builder</b><span><code>build.py</code> as a <code>Builder</code> with steps; run, run until a step, save data</span></a>
+  <a class="card" href="templates.html"><b>templates</b><span><code>PropBuild</code>, <code>BipedBuild</code></span></a>
+  <a class="card" href="components.html"><b>components</b><span>Spine, clavicle, arm, leg, digitigrade leg, hand, neck, head</span></a>
+  <a class="card" href="components-ik_solvers.html"><b>components.ik_solvers</b><span>How a limb's IK reaches its end; write your own for new limbs</span></a>
+  <a class="card" href="component.html"><b>component</b><span>The <code>Component</code> base class, roles and members</span></a>
+</div>
+<h3>Workspace window</h3>
+<div class="cards">
+  <a class="card" href="ui.html"><b>ui</b><span><code>ui.show()</code>: workspaces, their data and build, file actions, export the selection</span></a>
+  <a class="card" href="ui-export.html"><b>ui.export</b><span>What the Maya selection can export, where to, and what that changes</span></a>
+  <a class="card" href="ui-qt.html"><b>ui.qt</b><span>PySide6 or PySide2: the one place pkrig4 imports Qt</span></a>
+</div>
 
 <h2>Where to go next</h2>
 <ul>
   <li><a href="concepts.html">Concepts</a> explains how nodes, attributes, naming and undo work, in one page.</li>
-  <li><a href="node.html">node</a> covers the typed node classes and how editor autocomplete works.</li>
+  <li><a href="builder.html">builder</a> covers workspaces, steps and data, and how to build headless.</li>
+  <li><a href="ui.html">ui</a> covers the workspace window.</li>
   <li><a href="development.html">Development</a> covers tests, editor setup, regenerating stubs and versioning.</li>
 </ul>

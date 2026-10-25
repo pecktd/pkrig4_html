@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.components · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link active" aria-current="page" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.components</div>
+<h1><code>components</code></h1>
+<p class="lede">Rig components built on <code>pkrig4.Component</code>.</p>
+<div class="table-wrap"><table><tbody><tr><td><code>MainGroup</code></td><td><code>rig_grp</code> with world/global/local controls and the rig groups</td></tr><tr><td><code>PointRig</code></td><td>One joint driven by one control (cog, props, eyes)</td></tr><tr><td><code>FkRig</code></td><td>An FK chain, one control per bone (tails, fingers)</td></tr><tr><td><code>Spine</code></td><td>Pelvis, FK and chest controls on spline-IK spine joints</td></tr><tr><td><code>Clavicle</code></td><td>Clavicle control and joint, optional scapula</td></tr><tr><td><code>Arm</code>, <code>Leg</code></td><td>Two-bone FK/IK limbs with twist joints; legs add a foot roll</td></tr><tr><td><code>AnimalLeg</code></td><td>Digitigrade leg: a knee and a hock, a flex control and a foot roll</td></tr><tr><td><code>Hand</code></td><td>One FK chain per finger, with fist/cup/spread poses</td></tr><tr><td><code>Neck</code></td><td>Neck control with twist joints up to the head</td></tr><tr><td><code>Head</code></td><td>Head control, optional eyes with a shared target</td></tr></tbody></table></div>
+<p>Example:</p>
+<pre><code class="language-python">from pkrig4.components import FkRig, MainGroup, PointRig
+
+main = MainGroup()
+PointRig("L_eye_guide", name="eye", side=pk.Side.LEFT, parent=head_ctrl)
+FkRig(["tail_1_guide", "tail_2_guide", "tail_3_guide"], name="tail", parent=hips_ctrl)</code></pre>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#AnimalLeg">AnimalLeg</a></li><li><a href="#Arm">Arm</a></li><li><a href="#Clavicle">Clavicle</a></li><li><a href="#FkRig">FkRig</a></li><li><a href="#Hand">Hand</a></li><li><a href="#Head">Head</a></li><li><a href="#Leg">Leg</a></li><li><a href="#Limb">Limb</a></li><li><a href="#MainGroup">MainGroup</a></li><li><a href="#Neck">Neck</a></li><li><a href="#PointRig">PointRig</a></li><li><a href="#Spine">Spine</a></li></ul><div class="api"><div class="api-item" id="AnimalLeg">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#AnimalLeg"><span class="name">AnimalLeg</span></a>(
+    guides: Sequence[Transform | str],
+    *,
+    heel: Transform | str,
+    inner: Transform | str,
+    outer: Transform | str,
+    name: str = &#x27;leg&#x27;,
+    **kwargs,
+)</pre>
+<p class="bases">Bases: <code>Leg</code></p>
+<p>A digitigrade leg: upper leg, knee, hock, ankle, ball and toe joints. Starts in IK.</p>
+<p>Like <code>Leg</code>, with a hock between the knee and the ankle, solved by a <code>FlexSolver</code>: <code>flex_ctrl</code> at the ankle swings the hock around it, and the stretch attributes are <code>upperStretch</code>, <code>middleStretch</code> and <code>lowerStretch</code>. The knee and the hock each get a bend control.</p>
+</div><div class="api-item" id="Arm">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Arm"><span class="name">Arm</span></a>(guides: Sequence[Transform | str], *, name: str = &#x27;arm&#x27;, **kwargs)</pre>
+<p class="bases">Bases: <code>Limb</code></p>
+<p>An arm: upper arm, elbow, wrist and hand joints. Starts in FK.</p>
+<p>The IK control is aligned to the wrist guide and turns the wrist. <code>hand_space</code> follows the hand joint; parent a <code>Hand</code> under it.</p>
+</div><div class="api-item" id="Clavicle">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Clavicle"><span class="name">Clavicle</span></a>(
+    guide: Transform | str,
+    tip_guide: Transform | str,
+    *,
+    side: Side = Side.CENTER,
+    scapula: Transform | str | None = None,
+    name: str = &#x27;clav&#x27;,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>One control turning the clavicle joint; the arm hangs from <code>tip_jnt</code>.</p>
+<p>With <code>scapula</code>, a scapula control follows the clavicle control and drives a scapula joint under <code>skin_parent</code>. It is hidden until <code>scapVis</code> on the clavicle control is on.</p>
+<p>Roles: <code>ctrl</code>, <code>jnt</code>, <code>tip_jnt</code>, <code>scap_ctrl</code>, <code>scap_jnt</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guide</code></dt><dd>Guide at the clavicle's root; Y points along the bone.</dd><dt><code>tip_guide</code></dt><dd>Guide at the clavicle's end (usually the upper arm guide).</dd><dt><code>side</code></dt><dd>Side for names and colors.</dd><dt><code>scapula</code></dt><dd>Guide for the scapula, or None.</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>parent</code></dt><dd>Parent of the root group, e.g. the chest control.</dd><dt><code>skin_parent</code></dt><dd>Parent of the clavicle (and scapula) joint.</dd><dt><code>size</code></dt><dd>Control size; defaults to 30% of the clavicle's length.</dd><dt><code>skin_set</code></dt><dd>Set for the clavicle and scapula joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the controls, or None.</dd></dl>
+</div><div class="api-item" id="FkRig">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#FkRig"><span class="name">FkRig</span></a>(
+    guides: Sequence[Transform | str],
+    *,
+    name: str = &#x27;fk&#x27;,
+    side: Side = Side.CENTER,
+    shape: shapes.CurveShape = shapes.CIRCLE,
+    size: float = 1.0,
+    color: Color | None = None,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    tip: bool = True,
+    stretch: bool = True,
+    spaces: Sequence[tuple[DagNode | str, str]] = (),
+    space_kind: str = &#x27;orient&#x27;,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>A joint chain with one FK control per bone.</p>
+<p>With <code>tip=True</code> (the default) the last guide gets a joint but no control: it marks the end of the last bone, so the chain has one control fewer than joints, like a tail or a finger. With <code>tip=False</code> every joint gets a control.</p>
+<p>Each control except the last (or every control, with a tip) gets a <code>stretch</code> attribute: 1 makes the bone it drives 10% longer, -1 10% shorter. Stretch scales the bone's rest offset, so it works whichever axis the chain points down.</p>
+<p>Roles: <code>jnt</code> (indexed), <code>fk_ctrl</code> (indexed), <code>tip_jnt</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guides</code></dt><dd>Transforms, root first, giving each joint's position and orientation.</dd><dt><code>name</code></dt><dd>Component name (<code>"tail"</code> gives <code>tail_1_jnt</code>, <code>tail_1_ctrl</code>).</dd><dt><code>side</code></dt><dd>Side for names and the default color.</dd><dt><code>shape</code></dt><dd>Control curve shape.</dd><dt><code>size</code></dt><dd>Uniform scale for the control shapes.</dd><dt><code>color</code></dt><dd>Control color; defaults to the side color.</dd><dt><code>parent</code></dt><dd>Parent of the component's root group, where the controls live.</dd><dt><code>skin_parent</code></dt><dd>Parent for the first joint; defaults to the root group.</dd><dt><code>tip</code></dt><dd>Treat the last guide as a tip joint without a control.</dd><dt><code>stretch</code></dt><dd>Add <code>stretch</code> attributes.</dd><dt><code>spaces</code></dt><dd><code>(target, label)</code> pairs for a space switch on the first control.</dd><dt><code>space_kind</code></dt><dd><code>"orient"</code> (default, FK follows rotation only), <code>"parent"</code> or <code>"point"</code>.</dd><dt><code>skin_set</code></dt><dd>Set to add the joints to, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set to add the controls to, or None.</dd></dl>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>Fewer than two guides with <code>tip=True</code>, or none without.</dd></dl>
+</div><div class="api-item" id="Hand">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Hand"><span class="name">Hand</span></a>(
+    fingers: Mapping[str, Sequence[Transform | str]],
+    *,
+    side: Side = Side.CENTER,
+    poses: Poses = {&#x27;fist&#x27;: {&#x27;thumb&#x27;: {&#x27;rotateX&#x27;: (0, -9...,
+    name: str = &#x27;hand&#x27;,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>Fingers as FK chains, plus a hand control with pose attributes.</p>
+<p>Each finger is an <code>FkRig</code> whose last guide is a tip joint. Pose attributes on <code>ctrl</code> (<code>fist</code>, <code>cup</code>, <code>spread</code>...) turn the finger controls' offset groups, so the controls stay free for animation.</p>
+<p>Roles: <code>ctrl</code>, <code>&lt;finger&gt;</code> (each FkRig's root).</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>fingers</code></dt><dd>Guides per finger name, from the knuckle out to the tip.</dd><dt><code>side</code></dt><dd>Side for names and colors.</dd><dt><code>poses</code></dt><dd>Pose attributes and how far they turn each finger control; see <code>POSES</code>. Fingers missing from a pose don't move with it.</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>parent</code></dt><dd>Parent of the root group, e.g. the arm's <code>hand_space</code>.</dd><dt><code>skin_parent</code></dt><dd>Parent of the finger joints, e.g. the arm's hand joint.</dd><dt><code>size</code></dt><dd>Finger control size; defaults to 30% of the first finger's first bone.</dd><dt><code>skin_set</code></dt><dd>Set for the finger joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the controls, or None.</dd></dl>
+</div><div class="api-item" id="Head">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Head"><span class="name">Head</span></a>(
+    guide: Transform | str,
+    tip_guide: Transform | str,
+    *,
+    neck: Neck | None = None,
+    eyes: Mapping[Side, Transform | str] | None = None,
+    eye_distance: float | None = None,
+    spaces: Spaces = (),
+    eye_spaces: Spaces = (),
+    name: str = &#x27;head&#x27;,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>A head control turning the head joint, and eyes that look at a target.</p>
+<p>The head joint turns with the control. With a <code>neck</code>, the control gets <code>fkIk</code>: in FK (0) the neck stays with its own control and the head joint follows the control's translation off the neck's tip; in IK (1) the neck aims at the head control and stretches towards it, and the head joint stays on the neck's tip. <code>minStretch</code> and <code>maxStretch</code> (0.9 and 1.1 times the neck's rest length) limit that stretch, so in IK the head stops short of a control pulled too far; FK ignores them. Without a neck, the head joint follows the control's translation.</p>
+<p><code>child_space</code> follows the head joint; the eyes hang from it, and so should anything else that moves with the head. <code>twist</code> is the head joint's turn around its Y axis relative to its parent joint; with a <code>neck</code> it drives <code>Neck.head_twist</code>.</p>
+<p>Each eye has a control that turns it on top of the aim (<code>&lt;side&gt;_eye_ctrl</code>) and its own target under <code>eye_target</code>, which sits in front of the eyes and follows the head unless <code>eye_spaces</code> picks another space.</p>
+<p>Roles: <code>ctrl</code>, <code>jnt</code>, <code>tip_jnt</code>, <code>child_space</code>, <code>eye_target</code>, and per eye <code>eye_ctrl</code>, <code>eye_target_ctrl</code>, <code>eye_jnt</code> (indexed in <code>eyes</code> order).</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guide</code></dt><dd>Guide at the head's base; Y points up.</dd><dt><code>tip_guide</code></dt><dd>Guide at the top of the head.</dd><dt><code>neck</code></dt><dd>The neck the head sits on. The head goes under its <code>head_space</code> and tip joint unless <code>parent</code> or <code>skin_parent</code> say otherwise, and drives its <code>headTwist</code>, <code>fkIk</code>, <code>minStretch</code>, <code>maxStretch</code> and <code>head_target</code>.</dd><dt><code>eyes</code></dt><dd>Eye guides by side. Eyes aim along +Z with +Y up.</dd><dt><code>eye_distance</code></dt><dd>How far in front of the eyes the targets sit; defaults to the head's height.</dd><dt><code>spaces</code></dt><dd>Orient spaces for the head control.</dd><dt><code>eye_spaces</code></dt><dd>Parent spaces for the eye target.</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>parent</code></dt><dd>Parent of the root group; defaults to the neck's <code>head_space</code>.</dd><dt><code>skin_parent</code></dt><dd>Parent of the head joint; defaults to the neck's tip joint.</dd><dt><code>size</code></dt><dd>Control size; defaults to 60% of the head's height.</dd><dt><code>skin_set</code></dt><dd>Set for the head and eye joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the controls, or None.</dd></dl>
+</div><div class="api-item" id="Leg">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Leg"><span class="name">Leg</span></a>(
+    guides: Sequence[Transform | str],
+    *,
+    heel: Transform | str,
+    inner: Transform | str,
+    outer: Transform | str,
+    name: str = &#x27;leg&#x27;,
+    **kwargs,
+)</pre>
+<p class="bases">Bases: <code>Limb</code></p>
+<p>A leg: upper leg, knee, ankle, ball and toe joints, with a foot roll. Starts in IK.</p>
+<p>The IK control is aligned to the world at the ankle; its foot attributes are described in <code>FootRoll</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>heel</code></dt><dd>Guide at the back of the heel, on the ground.</dd><dt><code>inner</code></dt><dd>Guide on the inner edge of the foot.</dd><dt><code>outer</code></dt><dd>Guide on the outer edge of the foot.</dd></dl>
+</div><div class="api-item" id="Limb">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Limb"><span class="name">Limb</span></a>(
+    guides: Sequence[Transform | str],
+    *,
+    name: str,
+    side: Side = Side.CENTER,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    fk_spaces: Spaces = (),
+    ik_spaces: Spaces = (),
+    pole_spaces: Spaces | None = None,
+    twist_joints: int = 5,
+    bendy: bool = True,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+    ik_solver: IkSolver | None = None,
+    end: LimbEnd | None = None,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>Base class for FK/IK limbs; subclasses set <code>parts</code> and <code>bones</code>.</p>
+<p>The first <code>bones + 1</code> guides are the IK chain, from the root to the IK end; the rest follow the IK end joint. Three joint chains are built from the guides and blended by <code>fkIk</code>: the FK chain (an <code>FkRig</code>), the IK chain and the blend chain, which the skin joints follow. The joints between the root and the IK end are hinges: their FK controls only bend around X.</p>
+<p>The IK control moves the limb's end (<code>end</code>, e.g. a <code>FootRoll</code>), and <code>ik_solver</code> solves the IK chain onto it. The pole vector hangs from <code>pole_rotate_ctrl</code>, a ring on the line from the limb's root to the IK control: turning it swings the pole around that line. The pole sits on the bend side of the first hinge joint; the pole control itself is hidden until <code>poleVis</code> on the ring is on.</p>
+<p>Roles: <code>settings_ctrl</code>, <code>ik_ctrl</code>, <code>pole_rotate_ctrl</code>, <code>pole_ctrl</code>, <code>bend_ctrl</code> (indexed when there are two or more hinges), <code>&lt;label&gt;_bendy_ctrl</code>, <code>ik_handle</code>, <code>ik_jnt</code>, <code>blend_jnt</code>, <code>jnt</code> (indexed), <code>&lt;part&gt;_twist_jnt</code> (indexed), <code>fk_rig</code> (the FkRig's root), plus the solver's and the end's.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guides</code></dt><dd>One guide per name in <code>parts</code>.</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>side</code></dt><dd>Side for names and colors.</dd><dt><code>parent</code></dt><dd>Parent of the root group, e.g. the clavicle control.</dd><dt><code>skin_parent</code></dt><dd>Parent of the first skin joint.</dd><dt><code>fk_spaces</code></dt><dd>Orient spaces for the first FK control.</dd><dt><code>ik_spaces</code></dt><dd>Parent spaces for the IK control.</dd><dt><code>pole_spaces</code></dt><dd>Parent spaces for the pole vector; defaults to <code>ik_spaces</code>.</dd><dt><code>twist_joints</code></dt><dd>Twist joints per bone (0 for none). With twist joints, the skin set gets them instead of the joints from the root to the last hinge.</dd><dt><code>bendy</code></dt><dd>Put the twist joints on bendy segments: a <code>bend_ctrl</code> at each hinge joint and a <code>bendy_ctrl</code> on each bone curve them (shown with <code>bendyVis</code> on the settings control). Without, they stay on the straight bones.</dd><dt><code>size</code></dt><dd>Control size; defaults to 8% of the limb's length.</dd><dt><code>skin_set</code></dt><dd>Set for the deforming joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the controls, or None.</dd><dt><code>ik_solver</code></dt><dd>How the IK chain reaches the IK end; defaults to an <code>RpSolver</code>.</dd><dt><code>end</code></dt><dd>What the IK control moves; defaults to a <code>ControlEnd</code>.</dd></dl>
+<div class="members"><div class="member" id="Limb.upper_twist_jnts"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Limb.upper_twist_jnts"><span class="name">upper_twist_jnts</span></a>: list[node.joint]<span class="kind"></span></pre><p>The first bone's twist joints.</p></div><div class="member" id="Limb.lower_twist_jnts"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Limb.lower_twist_jnts"><span class="name">lower_twist_jnts</span></a>: list[node.joint]<span class="kind"></span></pre><p>The last bone's twist joints.</p></div><div class="member" id="Limb.bend_ctrl"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Limb.bend_ctrl"><span class="name">bend_ctrl</span></a>: node.transform | None<span class="kind"></span></pre><p>The first hinge's bend control, if the limb is bendy.</p></div><div class="member" id="Limb.chain"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Limb.chain"><span class="name">chain</span></a>(
+    kind: str,
+    parent: DagNode | str | None,
+    role: str,
+    *,
+    count: int | None = None,
+) -&gt; list[node.joint]</pre><p>Joints on the first <code>count</code> guides (all by default), named <code>&lt;part&gt;_&lt;kind&gt;</code>.</p>
+<p>The hinge joints don't compensate segment scale.</p></div></div>
+</div><div class="api-item" id="MainGroup">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#MainGroup"><span class="name">MainGroup</span></a>(
+    *,
+    size: float = 1.0,
+    parent: DagNode | str | None = None,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>The rig's root: <code>world_ctrl</code> &gt; <code>global_ctrl</code> &gt; <code>local_ctrl</code>, plus groups.</p>
+<p>Hierarchy:</p>
+<pre><code class="language-python">rig_grp
+    world_ctrl &gt; global_ctrl &gt; local_ctrl
+        ctrl_grp        components' controls
+        jnt_grp
+            root_jnt    parent of the skin joints
+    geo_grp             the model (display switch on rig_grp)
+    still_grp           nodes that must not move (hidden)</code></pre>
+<p><code>rig_grp</code> gets <code>ctrlVis</code>, <code>jntVis</code> and <code>geoVis</code> switches and a <code>geoDisplay</code> enum (normal, template, reference) for the model.</p>
+<p>Roles: <code>world_ctrl</code>, <code>global_ctrl</code>, <code>local_ctrl</code>, <code>ctrl_grp</code>, <code>jnt_grp</code>, <code>geo_grp</code>, <code>still_grp</code>, <code>root_jnt</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>size</code></dt><dd>Scale of the control shapes.</dd><dt><code>parent</code></dt><dd>Parent of <code>rig_grp</code>.</dd><dt><code>ctrl_set</code></dt><dd>Set to add the controls to, or None.</dd></dl>
+</div><div class="api-item" id="Neck">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Neck"><span class="name">Neck</span></a>(
+    guide: Transform | str,
+    head_guide: Transform | str,
+    *,
+    name: str = &#x27;neck&#x27;,
+    twist_joints: int = 4,
+    bendy: bool = True,
+    spaces: Sequence[tuple[DagNode | str, str]] = (),
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>A neck joint from <code>guide</code> to <code>head_guide</code>, turned by one control.</p>
+<p><code>head_space</code> follows the control at the head guide; parent the head there. Attributes on the root (not keyable) take their values from the head; <code>Head</code> connects them when given the neck:</p>
+<ul><li><code>headTwist</code> (0): spread along the twist joints.</li><li><code>fkIk</code> (0): 0 turns the neck joint with the control (FK); 1 aims it at <code>head_target</code> and stretches or shortens it so its tip reaches the target (IK). The aim keeps the control's X axis as its up, so the control still turns and twists the neck.</li><li><code>minStretch</code> (0.9), <code>maxStretch</code> (1.1): in IK, the neck's length stays between these times its rest length, so the tip may stop short of the target. FK ignores them.</li></ul>
+<p><code>head_target</code> sits at the head guide under <code>head_space</code>; constrain it to whatever the neck should reach for, e.g. the head control.</p>
+<p>Roles: <code>ctrl</code>, <code>jnt</code>, <code>tip_jnt</code>, <code>head_space</code>, <code>head_target</code>, <code>twist_jnt</code> (indexed), <code>bendy_ctrl</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guide</code></dt><dd>Guide at the neck's base; Y points up the neck.</dd><dt><code>head_guide</code></dt><dd>Guide at the head's base.</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>twist_joints</code></dt><dd>Twist joints along the neck (0 for none). With twist joints, the skin set gets them instead of the neck joint.</dd><dt><code>bendy</code></dt><dd>Put the twist joints on a bendy segment with a <code>bendy_ctrl</code> (shown with <code>bendyVis</code> on the neck control).</dd><dt><code>spaces</code></dt><dd>Orient spaces for the control.</dd><dt><code>parent</code></dt><dd>Parent of the root group, e.g. the chest control.</dd><dt><code>skin_parent</code></dt><dd>Parent of the neck joint.</dd><dt><code>size</code></dt><dd>Control size; defaults to 60% of the neck's length.</dd><dt><code>skin_set</code></dt><dd>Set for the skin joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the control, or None.</dd></dl>
+</div><div class="api-item" id="PointRig">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#PointRig"><span class="name">PointRig</span></a>(
+    guide: Transform | str,
+    *,
+    name: str = &#x27;point&#x27;,
+    side: Side = Side.CENTER,
+    shape: shapes.CurveShape = shapes.CUBE,
+    size: float = 1.0,
+    color: Color | None = None,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    spaces: Sequence[tuple[DagNode | str, str]] = (),
+    space_kind: str = &#x27;parent&#x27;,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>One joint at a guide, driven by a control (translate, rotate and scale).</p>
+<p>Roles: <code>jnt</code>, <code>ctrl</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>guide</code></dt><dd>Transform giving the joint's position and orientation.</dd><dt><code>name</code></dt><dd>Component name (<code>"eye"</code> gives <code>L_eye_jnt</code>, <code>L_eye_ctrl</code>).</dd><dt><code>side</code></dt><dd>Side for names and the default color.</dd><dt><code>shape</code></dt><dd>Control curve shape.</dd><dt><code>size</code></dt><dd>Uniform scale for the control shape.</dd><dt><code>color</code></dt><dd>Control color; defaults to the side color.</dd><dt><code>parent</code></dt><dd>Parent of the component's root group, where the control lives.</dd><dt><code>skin_parent</code></dt><dd>Parent for the joint; defaults to the root group.</dd><dt><code>spaces</code></dt><dd><code>(target, label)</code> pairs for a space switch on the control.</dd><dt><code>space_kind</code></dt><dd><code>"parent"</code>, <code>"orient"</code> or <code>"point"</code>.</dd><dt><code>skin_set</code></dt><dd>Set to add the joint to, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set to add the control to, or None.</dd></dl>
+</div><div class="api-item" id="Spine">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Spine"><span class="name">Spine</span></a>(
+    pelvis: Transform | str,
+    chest: Transform | str,
+    chest_tip: Transform | str,
+    *,
+    mid: Transform | str | None = None,
+    joints: int = 6,
+    name: str = &#x27;spine&#x27;,
+    parent: DagNode | str | None = None,
+    skin_parent: DagNode | str | None = None,
+    size: float | None = None,
+    skin_set: str | None = &#x27;skin_set&#x27;,
+    ctrl_set: str | None = &#x27;ctrl_set&#x27;,
+)</pre>
+<p class="bases">Bases: <code>Component</code></p>
+<p>Spine joints spread evenly along a curve shaped by the pelvis, middle and chest controls.</p>
+<p>Controls:</p>
+<ul><li><code>pelvis_ctrl</code> moves and turns the hips; the curve's base follows it.</li><li><code>fk_ctrls</code> (at the pelvis and the middle) turn everything above them.</li><li><code>chest_ctrl</code>, under the FK controls, moves and turns the chest.</li><li><code>mid_ctrl</code> rides the middle of the spine and bends it.</li></ul>
+<p>The chest can't pull away from or push into the pelvis past <code>minStretch</code> and <code>maxStretch</code> on the chest control (0.9 and 1.1 times the pelvis-to-chest length): <code>chest_space</code> turns with the chest control but stops there, and the spine and the chest joint follow it. Parent what hangs from the chest (clavicles, neck) under <code>chest_space</code>.</p>
+<p>The curve's CVs follow the controls like a skinned curve (the ones next to the middle are 70/30 blends), and a second curve beside it gives the joints their up direction, so the spine twists with the controls. The joints stay spread evenly, so the spine stretches with the curve. This is pkrig3's torso, so its skin weights carry over.</p>
+<p>Skin joints: <code>pelvis_jnt</code> &gt; <code>1_jnt</code>... &gt; <code>chest_jnt</code> &gt; <code>chest_tip_jnt</code>.</p>
+<p>Roles: <code>pelvis_ctrl</code>, <code>fk_ctrl</code> (indexed), <code>mid_ctrl</code>, <code>chest_ctrl</code>, <code>chest_space</code>, <code>pelvis_jnt</code>, <code>jnt</code> (indexed), <code>chest_jnt</code>, <code>chest_tip_jnt</code>, <code>curve</code>, <code>up_curve</code>.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>pelvis</code></dt><dd>Guide at the base of the spine; X is the spine's side axis.</dd><dt><code>chest</code></dt><dd>Guide at the chest.</dd><dt><code>chest_tip</code></dt><dd>Guide at the top of the chest (usually the neck's base).</dd><dt><code>mid</code></dt><dd>Guide for the middle; defaults to halfway.</dd><dt><code>joints</code></dt><dd>Spine joints from pelvis to chest (at least 3).</dd><dt><code>name</code></dt><dd>Component name.</dd><dt><code>parent</code></dt><dd>Parent of the root group, e.g. the cog control.</dd><dt><code>skin_parent</code></dt><dd>Parent of the pelvis joint.</dd><dt><code>size</code></dt><dd>Control size; defaults to 40% of the pelvis-to-chest length.</dd><dt><code>skin_set</code></dt><dd>Set for the skin joints, or None.</dd><dt><code>ctrl_set</code></dt><dd>Set for the controls, or None.</dd></dl>
+</div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

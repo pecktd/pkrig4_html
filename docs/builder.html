@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.builder · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link active" aria-current="page" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.builder</div>
+<h1><code>builder</code></h1>
+<p class="lede">Rig builds: a workspace's <code>build.py</code> as a <code>Builder</code> with named steps.</p>
+<div class="table-wrap"><table><tbody><tr><td><code>Builder</code></td><td>Base class; methods marked <code>@step</code> run in order, then <code>load_data</code>, <code>finalize</code> and <code>save</code></td></tr><tr><td><code>step</code></td><td>Marks a step; <code>@step(after="rig")</code> places it</td></tr><tr><td><code>Workspace</code></td><td>A workspace folder, its asset and variant, its paths</td></tr><tr><td><code>run</code></td><td>Load a workspace's <code>build.py</code> and build it (<code>until=</code>)</td></tr><tr><td><code>save_data</code></td><td>Write the build's data files from the open scene</td></tr><tr><td><code>BuildReport</code></td><td>Step times, data files read and warnings</td></tr><tr><td><code>BuildError</code></td><td>A step failed; <code>.report</code> says how far it got</td></tr></tbody></table></div>
+<p>A workspace's <code>build.py</code>:</p>
+<pre><code class="language-python">from pkrig4 import builder, data_io
+from pkrig4.templates import PropBuild
+
+class Build(PropBuild):
+    model_file = "D:/assets/robot/model/high.abc"
+
+    @builder.step(after="rig")
+    def antenna(self):
+        ...</code></pre>
+<p>Headless: <code>mayapy -m pkrig4.builder &lt;workspace&gt; [--until STEP]</code>.</p>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#Builder">Builder</a></li><li><a href="#BuildError">BuildError</a></li><li><a href="#BuildReport">BuildReport</a></li><li><a href="#DataItem">DataItem</a></li><li><a href="#StepResult">StepResult</a></li><li><a href="#Workspace">Workspace</a></li><li><a href="#load_build">load_build</a></li><li><a href="#run">run</a></li><li><a href="#save_data">save_data</a></li><li><a href="#step">step</a></li><li><a href="#step_names">step_names</a></li></ul><div class="api"><div class="api-item" id="Builder">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Builder"><span class="name">Builder</span></a>(workspace: Workspace | files.PathLike)</pre>
+<p>Base class for rig builds.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>workspace</code></dt><dd>The workspace to build in; <code>build.ma</code> and <code>build.dep</code> are written there and the build's data files are read from there.</dd></dl>
+<div class="members"><div class="member" id="Builder.run"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.run"><span class="name">run</span></a>(until: str | None = None) -&gt; BuildReport</pre><p>Build from a new scene, through step <code>until</code> (default: all steps).</p>
+<p>The scene is named <code>build.ma</code> in the workspace first, so relative data_io paths start there. <code>build.dep</code> lists the data files read.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd><code>until</code> isn't a step.</dd><dt><code>BuildError</code></dt><dd>A step raised. The scene is left as the step left it.</dd></dl></div><div class="member" id="Builder.warn"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.warn"><span class="name">warn</span></a>(message: str) -&gt; None</pre><p>Show a Maya warning and add it to the build report.</p></div><div class="member" id="Builder.import_file"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.import_file"><span class="name">import_file</span></a>(path: files.PathLike, **options: Any) -&gt; list[str]</pre><p>Import a <code>.ma</code>, <code>.fbx</code> or <code>.abc</code> file; return its top nodes.</p>
+<p><code>path</code> is relative to the workspace or absolute. <code>options</code> go to the matching <code>SceneFile</code> type, e.g. <code>parent=</code>.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>ValueError</code></dt><dd>The extension isn't a scene file type.</dd></dl></div><div class="member" id="Builder.data_items"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.data_items"><span class="name">data_items</span></a>() -&gt; list[tuple[DataType, Path]]</pre><p>Each item of <code>data</code> with its absolute path in the workspace.</p></div><div class="member" id="Builder.save_data"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.save_data"><span class="name">save_data</span></a>() -&gt; list[Path]</pre><p>Write every item of <code>data</code> from the open scene into the workspace.</p></div><div class="member" id="Builder.load_data"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.load_data"><span class="name">load_data</span></a>() -&gt; None</pre><p>Read every item of <code>data</code>; missing files are skipped with a warning.</p></div><div class="member" id="Builder.finalize"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.finalize"><span class="name">finalize</span></a>() -&gt; None</pre><p>Add every control to the control set, reset the time range, clear the selection.</p></div><div class="member" id="Builder.save"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Builder.save"><span class="name">save</span></a>() -&gt; None</pre><p>Save the scene as <code>build.ma</code> in the workspace.</p></div></div>
+</div><div class="api-item" id="BuildError">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#BuildError"><span class="name">BuildError</span></a>(message: str, report: BuildReport)</pre>
+<p class="bases">Bases: <code>RuntimeError</code></p>
+<p>A build step failed. The original error is <code>__cause__</code>.</p>
+<p>Attributes: report: The <code>BuildReport</code> up to and including the failed step.</p>
+</div><div class="api-item" id="BuildReport">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#BuildReport"><span class="name">BuildReport</span></a>(
+    workspace: Workspace,
+    steps: list[StepResult] = &lt;factory&gt;,
+    files: list[Path] = &lt;factory&gt;,
+    warnings: list[str] = &lt;factory&gt;,
+    failed: str | None = None,
+)</pre>
+<p>What a build did: steps and their times, data files read, warnings.</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>workspace</code></td><td><code>Workspace</code></td><td><code></code></td><td></td></tr><tr><td><code>steps</code></td><td><code>list[StepResult]</code></td><td><code></code></td><td></td></tr><tr><td><code>files</code></td><td><code>list[Path]</code></td><td><code></code></td><td></td></tr><tr><td><code>warnings</code></td><td><code>list[str]</code></td><td><code></code></td><td></td></tr><tr><td><code>failed</code></td><td><code>str | None</code></td><td><code>None</code></td><td>The step that raised, or None.</td></tr></tbody></table></div>
+<div class="members"><div class="member" id="BuildReport.ok"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#BuildReport.ok"><span class="name">ok</span></a>: bool<span class="kind"></span></pre></div><div class="member" id="BuildReport.seconds"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#BuildReport.seconds"><span class="name">seconds</span></a>: float<span class="kind"></span></pre></div></div>
+</div><div class="api-item" id="DataItem"><pre class="sig"><a class="anchor" href="#DataItem"><span class="name">DataItem</span></a> = pkrig4.data_io.base.DataType | tuple[...</pre></div><div class="api-item" id="StepResult">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#StepResult"><span class="name">StepResult</span></a>(name: str, seconds: float)</pre>
+
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th></th></tr></thead><tbody><tr><td><code>name</code></td><td><code>str</code></td><td><code></code></td><td></td></tr><tr><td><code>seconds</code></td><td><code>float</code></td><td><code></code></td><td></td></tr></tbody></table></div>
+</div><div class="api-item" id="Workspace">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#Workspace"><span class="name">Workspace</span></a>(folder: files.PathLike)</pre>
+<p>A workspace folder.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>folder</code></dt><dd>The workspace folder. It doesn't have to exist yet.</dd></dl>
+<div class="members"><div class="member" id="Workspace.of_scene"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Workspace.of_scene"><span class="name">of_scene</span></a>() -&gt; Workspace</pre><p>The workspace of the open scene (the folder <code>build.ma</code> was saved in).</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>RuntimeError</code></dt><dd>The scene is unsaved.</dd></dl></div><div class="member" id="Workspace.create"><pre class="sig"><span class="kind">classmethod</span> <a class="anchor" href="#Workspace.create"><span class="name">create</span></a>(folder: files.PathLike, template: files.PathLike) -&gt; Workspace</pre><p>Copy a template folder to <code>folder</code> and return the new workspace.</p>
+<p>Build output (<code>build.ma</code>, <code>build.dep</code>, <code>__pycache__</code>) isn't copied.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>FileExistsError</code></dt><dd><code>folder</code> already exists.</dd><dt><code>FileNotFoundError</code></dt><dd><code>template</code> has no <code>build.py</code>.</dd></dl></div><div class="member" id="Workspace.name"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.name"><span class="name">name</span></a>: str<span class="kind"></span></pre><p>The workspace folder's name.</p></div><div class="member" id="Workspace.variant"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.variant"><span class="name">variant</span></a>: str | None<span class="kind"></span></pre><p>The variant folder's name, or None outside the asset layout.</p></div><div class="member" id="Workspace.asset"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.asset"><span class="name">asset</span></a>: str | None<span class="kind"></span></pre><p>The asset's name, or None outside the asset layout.</p></div><div class="member" id="Workspace.asset_folder"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.asset_folder"><span class="name">asset_folder</span></a>: Path | None<span class="kind"></span></pre><p><code>&lt;asset&gt;</code> in <code>&lt;asset&gt;/work/rig/&lt;variant&gt;/&lt;workspace&gt;</code>, or None.</p></div><div class="member" id="Workspace.build_file"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.build_file"><span class="name">build_file</span></a>: Path<span class="kind"></span></pre></div><div class="member" id="Workspace.scene_path"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.scene_path"><span class="name">scene_path</span></a>: Path<span class="kind"></span></pre></div><div class="member" id="Workspace.log_path"><pre class="sig"><span class="kind">property</span> <a class="anchor" href="#Workspace.log_path"><span class="name">log_path</span></a>: Path<span class="kind"></span></pre></div><div class="member" id="Workspace.path"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Workspace.path"><span class="name">path</span></a>(*parts: files.PathLike) -&gt; Path</pre><p>A path inside the workspace; an absolute part replaces the folder.</p></div><div class="member" id="Workspace.is_current"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#Workspace.is_current"><span class="name">is_current</span></a>() -&gt; bool</pre><p>Whether the open scene is this workspace's <code>build.ma</code>.</p></div></div>
+</div><div class="api-item" id="load_build"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#load_build"><span class="name">load_build</span></a>(workspace: Workspace | files.PathLike | None = None) -&gt; type[Builder]</pre><p>Import a workspace's <code>build.py</code> fresh and return its <code>Build</code> class.</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>workspace</code></dt><dd>Defaults to the open scene's workspace.</dd></dl>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>FileNotFoundError</code></dt><dd>The workspace has no <code>build.py</code>.</dd><dt><code>TypeError</code></dt><dd><code>build.py</code> doesn't define <code>class Build(Builder)</code>.</dd></dl></div><div class="api-item" id="run"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#run"><span class="name">run</span></a>(
+    workspace: Workspace | files.PathLike | None = None,
+    *,
+    until: str | None = None,
+) -&gt; BuildReport</pre><p>Build a workspace (default: the open scene's) through step <code>until</code>.</p>
+<div class="section-label">Raises</div>
+<dl class="params"><dt><code>BuildError</code></dt><dd>A step failed; the scene is left as that step left it.</dd></dl></div><div class="api-item" id="save_data"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#save_data"><span class="name">save_data</span></a>(workspace: Workspace | files.PathLike | None = None) -&gt; list[Path]</pre><p>Write the build's <code>data</code> from the open scene into the workspace.</p></div><div class="api-item" id="step"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#step"><span class="name">step</span></a>(
+    func: F | None = None,
+    *,
+    after: str | None = None,
+    before: str | None = None,
+) -&gt; F | Callable[[F], F]</pre><p>Mark a <code>Builder</code> method as a build step.</p>
+<p>Use it bare (<code>@step</code>) or with a place (<code>@step(after="rig")</code>).</p>
+<div class="section-label">Args</div>
+<dl class="params"><dt><code>after</code></dt><dd>Run right after this step.</dd><dt><code>before</code></dt><dd>Run right before this step.</dd></dl></div><div class="api-item" id="step_names"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#step_names"><span class="name">step_names</span></a>(workspace: Workspace | files.PathLike | None = None) -&gt; tuple[str, ...]</pre><p>The workspace build's steps, in run order.</p></div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

@@ -61,6 +61,40 @@ PAGES: list[tuple[str, list[tuple[str, str, str | None]]]] = [
             ("scene", "scene", "scene"),
         ],
     ),
+    (
+        "Data I/O",
+        [
+            ("data_io", "data_io", "data_io"),
+            ("data_io-files", "data_io.files", "data_io.files"),
+        ],
+    ),
+    (
+        "Builder",
+        [
+            ("builder", "builder", "builder"),
+            ("templates", "templates", "templates"),
+        ],
+    ),
+    (
+        "Components",
+        [
+            ("component", "component", "component"),
+            ("components", "components", "components"),
+            ("components-ik_solvers", "components.ik_solvers", "components.ik_solvers"),
+            ("components-limb_ends", "components.limb_ends", "components.limb_ends"),
+            ("ik", "ik", "ik"),
+        ],
+    ),
+    (
+        "Workspace window",
+        [
+            ("ui", "ui", "ui"),
+            ("ui-model", "ui.model", "ui.model"),
+            ("ui-actions", "ui.actions", "ui.actions"),
+            ("ui-export", "ui.export", "ui.export"),
+            ("ui-qt", "ui.qt", "ui.qt"),
+        ],
+    ),
     ("Development", [("development", "Development", None)]),
 ]
 
@@ -129,6 +163,63 @@ def clean(doc: str | None) -> str:
     return inspect.cleandoc(doc) if doc else ""
 
 
+TABLE_RULE = re.compile(r"^=+(?: +=+)+\s*$")
+"""A reStructuredText simple-table rule: ``=====  ======``."""
+
+
+def _render_simple_table(lines: list[str], start: int) -> tuple[str, int]:
+    """A reStructuredText simple table from its opening rule; returns the HTML and the next line.
+
+    Columns start where the rule's ``=`` runs start. A third rule makes the
+    rows before it a header. A row whose first column is blank continues the
+    row above.
+    """
+    rule = lines[start]
+    starts = [m.start() for m in re.finditer(r"=+", rule)]
+    rows: list[list[str]] = []
+    rules = 0
+    header_rows = 0
+    i = start + 1
+    while i < len(lines):
+        line = lines[i]
+        if TABLE_RULE.match(line):
+            rules += 1
+            i += 1
+            if rules == 1 and _rule_before_blank(lines, i):
+                header_rows = len(rows)  # a third rule follows: the rows so far are the header
+                continue
+            break
+        if not line.strip():
+            i += 1
+            continue
+        cells = [
+            line[a : (starts[n + 1] if n + 1 < len(starts) else None)].strip()
+            for n, a in enumerate(starts)
+        ]
+        if rows and not cells[0]:
+            rows[-1] = [f"{old} {new}".strip() for old, new in zip(rows[-1], cells)]
+        else:
+            rows.append(cells)
+        i += 1
+    head = "".join(
+        "<tr>" + "".join(f"<th>{inline(c)}</th>" for c in r) + "</tr>" for r in rows[:header_rows]
+    )
+    body = "".join(
+        "<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in rows[header_rows:]
+    )
+    thead = f"<thead>{head}</thead>" if head else ""
+    return f'<div class="table-wrap"><table>{thead}<tbody>{body}</tbody></table></div>', i
+
+
+def _rule_before_blank(lines: list[str], start: int) -> bool:
+    for line in lines[start:]:
+        if not line.strip():
+            return False
+        if TABLE_RULE.match(line):
+            return True
+    return False
+
+
 def render_doc(doc: str | None) -> str:
     """Render already-cleaned docstring text; pass raw ``__doc__`` through :func:`clean`."""
     if not doc:
@@ -166,6 +257,10 @@ def render_doc(doc: str | None) -> str:
         if not para and line.startswith((" ", "\t")):
             body, i = _take_indented(lines, i)
             out.append(code_block(body))
+            continue
+        if not para and TABLE_RULE.match(line):
+            html_table, i = _render_simple_table(lines, i)
+            out.append(html_table)
             continue
         if not para and stripped.startswith(">>>"):
             block = []
@@ -404,10 +499,25 @@ def render_value(name: str, value: object) -> str:
     return f'<div class="api-item" id="{name}">{sig}</div>'
 
 
+def module_link(module: object) -> str:
+    """A link to a submodule's page if the manual has one, else its name."""
+    dotted = getattr(module, "__name__", "").removeprefix("pkrig4.")
+    slugs = {mod: slug for _, pages in PAGES for slug, _, mod in pages if mod}
+    label = f"<code>{html.escape(dotted)}</code>"
+    return f'<a href="{slugs[dotted]}.html">{label}</a>' if dotted in slugs else label
+
+
 def render_reference(module: object) -> str:
-    names = list(getattr(module, "__all__", []))
+    exported = list(getattr(module, "__all__", []))
+    # Submodules listed in __all__ are links, not reference entries.
+    submodules = [getattr(module, n) for n in exported if inspect.ismodule(getattr(module, n))]
+    names = [n for n in exported if not inspect.ismodule(getattr(module, n))]
+    modules_html = ""
+    if submodules:
+        links = ", ".join(module_link(m) for m in submodules)
+        modules_html = f'<p class="modules">Modules: {links}</p>'
     if not names:
-        return ""
+        return modules_html
     items = []
     for name in names:
         obj = getattr(module, name)
@@ -418,7 +528,10 @@ def render_reference(module: object) -> str:
         else:
             items.append(render_value(name, obj))
     toc = "".join(f'<li><a href="#{n}">{n}</a></li>' for n in names)
-    return f'<h2 id="reference">Reference</h2><ul class="toc-inline">{toc}</ul><div class="api">{"".join(items)}</div>'
+    return (
+        f'<h2 id="reference">Reference</h2>{modules_html}<ul class="toc-inline">{toc}</ul>'
+        f'<div class="api">{"".join(items)}</div>'
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -441,7 +554,7 @@ LAYOUT = """<!doctype html>
 <body>
 <div class="page">
 <aside class="sidebar" id="sidebar">
-<a class="brand" href="index.html"><b>pkrig4</b><span>v{version} · Maya rigging core</span></a>
+<a class="brand" href="index.html"><b>pkrig4</b><span>v{version} · Maya rigging framework</span></a>
 <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
 <nav aria-label="Manual">
 {nav}

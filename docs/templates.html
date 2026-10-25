@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pkrig4.templates · pkrig4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
+</head>
+<body>
+<div class="page">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+<nav aria-label="Manual">
+<div class="nav-section">Getting started</div>
+<a class="nav-link" href="index.html">Overview</a>
+<a class="nav-link" href="concepts.html">Concepts</a>
+<div class="nav-section">Core</div>
+<a class="nav-link" href="node.html"><code>node</code></a>
+<a class="nav-link" href="core.html"><code>core</code></a>
+<a class="nav-link" href="attribute.html"><code>attribute</code></a>
+<a class="nav-link" href="naming.html"><code>naming</code></a>
+<a class="nav-link" href="constants.html"><code>constants</code></a>
+<a class="nav-link" href="shapes.html"><code>shapes</code></a>
+<a class="nav-link" href="context.html"><code>context</code></a>
+<div class="nav-section">Helpers</div>
+<a class="nav-link" href="joints.html"><code>joints</code></a>
+<a class="nav-link" href="controls.html"><code>controls</code></a>
+<a class="nav-link" href="constraints.html"><code>constraints</code></a>
+<a class="nav-link" href="spaces.html"><code>spaces</code></a>
+<a class="nav-link" href="attrs.html"><code>attrs</code></a>
+<a class="nav-link" href="connect.html"><code>connect</code></a>
+<a class="nav-link" href="twist.html"><code>twist</code></a>
+<a class="nav-link" href="deform.html"><code>deform</code></a>
+<a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link active" aria-current="page" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
+<div class="nav-section">Development</div>
+<a class="nav-link" href="development.html">Development</a>
+</nav>
+</aside>
+<main>
+<div class="eyebrow">pkrig4.templates</div>
+<h1><code>templates</code></h1>
+<p class="lede">Build templates: <code>Builder</code> subclasses that workspaces inherit.</p>
+<p>A workspace's <code>build.py</code> subclasses a template and changes only what differs, so a fix to the template reaches every workspace on its next build.</p>
+<div class="table-wrap"><table><tbody><tr><td><code>PropBuild</code></td><td>One control and joint at <code>cog_guide</code>; the model bound rigidly</td></tr><tr><td><code>BipedBuild</code></td><td>Spine, clavicles, arms, hands, legs, neck and head</td></tr></tbody></table></div>
+<p>Example:</p>
+<pre><code class="language-python">from pkrig4 import builder
+from pkrig4.templates import PropBuild
+
+class Build(PropBuild):
+    model_file = "D:/assets/robotArm/model/high.abc"
+
+    @builder.step(after="rig")
+    def antenna(self):
+        ...</code></pre>
+
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#BipedBuild">BipedBuild</a></li><li><a href="#PropBuild">PropBuild</a></li></ul><div class="api"><div class="api-item" id="BipedBuild">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#BipedBuild"><span class="name">BipedBuild</span></a>(workspace: Workspace | files.PathLike)</pre>
+<p class="bases">Bases: <code>Builder</code></p>
+<p>Steps: <code>guides</code>, <code>rig</code>, <code>spine</code>, <code>arms</code>, <code>legs</code>, <code>head</code>, <code>model</code>, then the built-in steps.</p>
+<p>The components are kept for later steps and subclasses: <code>main</code>, <code>cog</code>, <code>spine_rig</code>, <code>neck_rig</code>, <code>head_rig</code>, and by side <code>clav_rigs</code>, <code>arm_rigs</code>, <code>hand_rigs</code>, <code>leg_rigs</code>.</p>
+<div class="members"><div class="member" id="BipedBuild.guide"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.guide"><span class="name">guide</span></a>(*parts: str, side: Side = Side.CENTER) -&gt; str</pre><p>A guide's name: <code>guide("upper_arm", side=Side.LEFT)</code> → <code>L_upper_arm_guide</code>.</p></div><div class="member" id="BipedBuild.guides"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.guides"><span class="name">guides</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.rig"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.rig"><span class="name">rig</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.spine"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.spine"><span class="name">spine</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.arms"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.arms"><span class="name">arms</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.legs"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.legs"><span class="name">legs</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.head"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.head"><span class="name">head</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.model"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.model"><span class="name">model</span></a>() -&gt; None</pre></div><div class="member" id="BipedBuild.finalize"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#BipedBuild.finalize"><span class="name">finalize</span></a>() -&gt; None</pre></div></div>
+</div><div class="api-item" id="PropBuild">
+<pre class="sig"><span class="kind">class</span> <a class="anchor" href="#PropBuild"><span class="name">PropBuild</span></a>(workspace: Workspace | files.PathLike)</pre>
+<p class="bases">Bases: <code>Builder</code></p>
+<p>Steps: <code>guides</code>, <code>rig</code>, <code>model</code>, <code>skin</code>, then the built-in steps.</p>
+<div class="members"><div class="member" id="PropBuild.guides"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#PropBuild.guides"><span class="name">guides</span></a>() -&gt; None</pre></div><div class="member" id="PropBuild.rig"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#PropBuild.rig"><span class="name">rig</span></a>() -&gt; None</pre></div><div class="member" id="PropBuild.model"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#PropBuild.model"><span class="name">model</span></a>() -&gt; None</pre></div><div class="member" id="PropBuild.skin"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#PropBuild.skin"><span class="name">skin</span></a>() -&gt; None</pre><p>Bind every unskinned mesh under <code>geo_grp</code> to the cog joint.</p></div><div class="member" id="PropBuild.finalize"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#PropBuild.finalize"><span class="name">finalize</span></a>() -&gt; None</pre></div></div>
+</div></div>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const toggle = document.querySelector(".menu-toggle");
+toggle.addEventListener("click", () => {
+  const open = document.getElementById("sidebar").classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+</script>
+</body>
+</html>

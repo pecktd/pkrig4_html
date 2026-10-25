@@ -9,12 +9,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="style.css?v=0.0.2-2026-10-21">
+<link rel="stylesheet" href="style.css?v=0.1.0-2026-10-25">
 </head>
 <body>
 <div class="page">
 <aside class="sidebar" id="sidebar">
-<a class="brand" href="index.html"><b>pkrig4</b><span>v0.0.2 · Maya rigging core</span></a>
+<a class="brand" href="index.html"><b>pkrig4</b><span>v0.1.0 · Maya rigging framework</span></a>
 <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
 <nav aria-label="Manual">
 <div class="nav-section">Getting started</div>
@@ -38,6 +38,24 @@
 <a class="nav-link" href="twist.html"><code>twist</code></a>
 <a class="nav-link" href="deform.html"><code>deform</code></a>
 <a class="nav-link" href="scene.html"><code>scene</code></a>
+<div class="nav-section">Data I/O</div>
+<a class="nav-link" href="data_io.html"><code>data_io</code></a>
+<a class="nav-link" href="data_io-files.html"><code>data_io.files</code></a>
+<div class="nav-section">Builder</div>
+<a class="nav-link" href="builder.html"><code>builder</code></a>
+<a class="nav-link" href="templates.html"><code>templates</code></a>
+<div class="nav-section">Components</div>
+<a class="nav-link" href="component.html"><code>component</code></a>
+<a class="nav-link" href="components.html"><code>components</code></a>
+<a class="nav-link" href="components-ik_solvers.html"><code>components.ik_solvers</code></a>
+<a class="nav-link" href="components-limb_ends.html"><code>components.limb_ends</code></a>
+<a class="nav-link" href="ik.html"><code>ik</code></a>
+<div class="nav-section">Workspace window</div>
+<a class="nav-link" href="ui.html"><code>ui</code></a>
+<a class="nav-link" href="ui-model.html"><code>ui.model</code></a>
+<a class="nav-link" href="ui-actions.html"><code>ui.actions</code></a>
+<a class="nav-link" href="ui-export.html"><code>ui.export</code></a>
+<a class="nav-link" href="ui-qt.html"><code>ui.qt</code></a>
 <div class="nav-section">Development</div>
 <a class="nav-link" href="development.html">Development</a>
 </nav>
@@ -53,7 +71,7 @@ constraints.point_constraint([a, b], loc, weights=[0.25, 0.75])
 constraints.constrain_to_skin_weights("body_GEO.vtx[812]", button_zr)</code></pre>
 <p><code>drivers</code> may be one node or a list. Parent and orient constraints use shortest-path rotation interpolation, so blended rotations don't flip.</p>
 
-<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#parent_constraint">parent_constraint</a></li><li><a href="#point_constraint">point_constraint</a></li><li><a href="#orient_constraint">orient_constraint</a></li><li><a href="#scale_constraint">scale_constraint</a></li><li><a href="#aim_constraint">aim_constraint</a></li><li><a href="#constrain_to_skin_weights">constrain_to_skin_weights</a></li></ul><div class="api"><div class="api-item" id="parent_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#parent_constraint"><span class="name">parent_constraint</span></a>(
+<h2 id="reference">Reference</h2><ul class="toc-inline"><li><a href="#parent_constraint">parent_constraint</a></li><li><a href="#point_constraint">point_constraint</a></li><li><a href="#orient_constraint">orient_constraint</a></li><li><a href="#scale_constraint">scale_constraint</a></li><li><a href="#aim_constraint">aim_constraint</a></li><li><a href="#pole_vector_constraint">pole_vector_constraint</a></li><li><a href="#constrain_to_skin_weights">constrain_to_skin_weights</a></li></ul><div class="api"><div class="api-item" id="parent_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#parent_constraint"><span class="name">parent_constraint</span></a>(
     drivers: Drivers,
     driven: Node | str,
     *,
@@ -89,10 +107,12 @@ constraints.constrain_to_skin_weights("body_GEO.vtx[812]", button_zr)</code></pr
     up_axis: Sequence[float] = (1, 0, 0),
     up_vector: Sequence[float] = (0, 1, 0),
     up_object: Node | str | None = None,
+    up_rotation: bool = False,
     maintain_offset: bool = False,
     weights: Sequence[float] | None = None,
     **flags: Any,
-) -&gt; node.aimConstraint</pre><p>Aim <code>aim_axis</code> at the drivers; <code>up_axis</code> follows <code>up_vector</code> or <code>up_object</code>.</p></div><div class="api-item" id="constrain_to_skin_weights"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#constrain_to_skin_weights"><span class="name">constrain_to_skin_weights</span></a>(
+) -&gt; node.aimConstraint</pre><p>Aim <code>aim_axis</code> at the drivers; <code>up_axis</code> follows <code>up_vector</code> or <code>up_object</code>.</p>
+<p>With <code>up_object</code>, <code>up_axis</code> points at the object; with <code>up_rotation</code> as well, it follows <code>up_vector</code> in the object's space instead, so it turns with the object without depending on where the object is.</p></div><div class="api-item" id="pole_vector_constraint"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#pole_vector_constraint"><span class="name">pole_vector_constraint</span></a>(pole: Node | str, handle: Node | str) -&gt; node.poleVectorConstraint</pre><p>Make an IK handle's plane point at <code>pole</code>.</p></div><div class="api-item" id="constrain_to_skin_weights"><pre class="sig"><span class="kind">def</span> <a class="anchor" href="#constrain_to_skin_weights"><span class="name">constrain_to_skin_weights</span></a>(
     vertex: str,
     driven: Node | str,
     *,
@@ -101,7 +121,7 @@ constraints.constrain_to_skin_weights("body_GEO.vtx[812]", button_zr)</code></pr
 <p>Influences below <code>ignore_below</code> are dropped and the rest renormalised to sum to 1, so the constraint follows the vertex the way the skin does.</p>
 <div class="section-label">Raises</div>
 <dl class="params"><dt><code>ValueError</code></dt><dd>The mesh has no skinCluster, or the vertex has no weights above <code>ignore_below</code>.</dd></dl></div></div>
-<footer>Generated from pkrig4 0.0.2 on 2026-10-21. The reference is built from the code's own docstrings.</footer>
+<footer>Generated from pkrig4 0.1.0 on 2026-10-25. The reference is built from the code's own docstrings.</footer>
 </main>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
